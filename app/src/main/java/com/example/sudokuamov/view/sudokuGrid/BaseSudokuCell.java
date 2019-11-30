@@ -14,6 +14,7 @@ public class BaseSudokuCell extends View {
     }
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        //noinspection SuspiciousNameCombination
         super.onMeasure(widthMeasureSpec, widthMeasureSpec);
     }
 

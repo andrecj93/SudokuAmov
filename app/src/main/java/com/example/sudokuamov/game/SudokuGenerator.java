@@ -114,19 +114,11 @@ public class SudokuGenerator {
         int xPos = currentPosition % Configurations.GRID9;
         int yPos = currentPosition / Configurations.GRID9;
 
-        if (checkHorizontalConflict(sudokuGrid, xPos, yPos, number) || checkVerticalConflict(sudokuGrid, xPos, yPos, number) || checkRegionConflict(sudokuGrid, xPos, yPos, number)) {
-            return true;
-        }
-
-        return false;
+        return checkHorizontalConflict(sudokuGrid, xPos, yPos, number) || checkVerticalConflict(sudokuGrid, xPos, yPos, number) || checkRegionConflict(sudokuGrid, xPos, yPos, number);
     }
 
 
     /**
-     * @param sudokuGrid
-     * @param xPos
-     * @param yPos
-     * @param number
      * @return Return true if there is a conflict
      */
     public boolean checkHorizontalConflict(final int[][] sudokuGrid, final int xPos, final int yPos, final int number) {
