@@ -1,23 +1,22 @@
 package com.example.sudokuamov;
 
 import android.app.Activity;
-
 import android.os.Bundle;
 
 import com.example.sudokuamov.game.GameEngine;
 import com.example.sudokuamov.game.helpers.Configurations;
 import com.example.sudokuamov.game.helpers.Levels;
 
-public class MainActivity extends Activity {
+public class SingleplayerActivity extends Activity {
     //Singleton to run for the entire game
-    private GameEngine game = GameEngine.getInstance();
+    private GameEngine game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_singleplayer);
 
-
+        game = GameEngine.getInstance();
         //Set difficulty of the game
         game.setLevels(Levels.EASY);
         //Generates a new grid and creates a new GameGrid object which contains the grid view and the sudoku cells

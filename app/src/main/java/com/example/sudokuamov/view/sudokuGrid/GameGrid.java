@@ -10,6 +10,7 @@ import com.example.sudokuamov.game.helpers.Configurations;
 public class GameGrid {
     private SudokuCell[][] sudokuCells = new SudokuCell[Configurations.GRID9][Configurations.GRID9];
     private Context context;
+
     public GameGrid(Context context)
     {
         this.context = context;

@@ -2,12 +2,15 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/myContraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
-    android:paddingRight="10dp"
     android:paddingTop="20dp"
-    tools:context=".MainActivity">
+    android:paddingRight="10dp"
+    android:paddingBottom="20dp"
+    tools:context=".SingleplayerActivity"
+    tools:ignore="MissingDefaultResource">
 
     <com.example.sudokuamov.view.sudokuGrid.SudokuGridView
         android:id="@+id/sudokuGridView"
@@ -16,17 +19,17 @@
         android:horizontalSpacing="0dp"
         android:numColumns="9"
         android:verticalSpacing="0dp"
-        app:layout_constraintBottom_toTopOf="@id/buttonGridView"
-        app:layout_constraintEnd_toStartOf="@id/sudokuGridView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="10dp" />
 
     <com.example.sudokuamov.view.buttonsGrid.ButtonsGridView
         android:id="@+id/buttonGridView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:numColumns="6"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sudokuGridView" />
+        app:layout_constraintTop_toBottomOf="@+id/sudokuGridView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
