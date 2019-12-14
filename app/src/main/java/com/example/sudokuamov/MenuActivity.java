@@ -9,10 +9,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
 
         setButtonActions();
     }
@@ -28,7 +30,8 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.buttonSinglePlayer: {
-                Intent intent = new Intent(this, SingleplayerActivity.class);
+                Intent intent = new Intent(this, LevelsActivity.class);
+                intent.putExtra("Mode", "singleplayer");
                 startActivity(intent);
                 break;
             }

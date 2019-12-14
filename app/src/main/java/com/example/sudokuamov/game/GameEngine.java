@@ -12,7 +12,13 @@ public class GameEngine {
 
     private int selectedPosX = -1, selectedPosY = -1;
 
-    public GameEngine(){}
+    public GameEngine() {
+
+    }
+
+    public void resetGame() {
+        instance = null;
+    }
 
     public static GameEngine getInstance() {
         if (instance == null)
