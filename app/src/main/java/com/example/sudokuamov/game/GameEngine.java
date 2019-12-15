@@ -16,7 +16,7 @@ public class GameEngine {
 
     }
 
-    public void resetGame() {
+    public static void resetGame() {
         instance = null;
     }
 

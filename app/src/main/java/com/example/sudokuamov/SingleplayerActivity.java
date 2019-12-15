@@ -3,7 +3,6 @@ package com.example.sudokuamov;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.sudokuamov.game.GameEngine;
 import com.example.sudokuamov.game.helpers.Configurations;
@@ -20,7 +19,7 @@ public class SingleplayerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_singleplayer);
 
-        game.resetGame();
+        GameEngine.resetGame();
 
         Intent intent = getIntent();
 
@@ -29,8 +28,6 @@ public class SingleplayerActivity extends Activity {
 
         difficulty = intent.getIntExtra("Difficulty", 0);
 
-
-        Log.d("difficulty", "=" + difficulty);
         initBoard(true);
     }
 

@@ -66,6 +66,8 @@ public class LevelsActivity extends AppCompatActivity implements View.OnClickLis
 
                 break;
         }
+
+        finish();
     }
 
     @Override
