@@ -49,7 +49,7 @@ public class SingleplayerActivity extends Activity {
         }
 
 
-        printSudoku(game.getGrid().getSudokuCellsInteger());
+        //printSudoku(game.getGrid().getSudokuCellsInteger());
     }
 
     private void printSudoku(int[][] sudokuGrid){

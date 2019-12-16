@@ -1,11 +1,10 @@
-package com.example.sudokuamov.view.sudokuGrid;
+package com.example.sudokuamov.game;
 
 import android.content.Context;
 import android.widget.Toast;
 
-import com.example.sudokuamov.game.SudokuChecker;
-import com.example.sudokuamov.game.SudokuGenerator;
 import com.example.sudokuamov.game.helpers.Configurations;
+import com.example.sudokuamov.view.sudokuGrid.SudokuCell;
 
 public class GameGrid {
     private SudokuCell[][] sudokuCells = new SudokuCell[Configurations.GRID9][Configurations.GRID9];

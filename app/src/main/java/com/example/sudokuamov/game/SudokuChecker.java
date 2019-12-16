@@ -17,7 +17,7 @@ public class SudokuChecker
     }
 
     public boolean checkSudoku(int[][] sudokuGrid){
-        return (checkHorizontal(sudokuGrid) || checkVertical(sudokuGrid) || checkRegions(sudokuGrid));
+        return (checkHorizontal(sudokuGrid) && checkVertical(sudokuGrid) && checkRegions(sudokuGrid));
     }
 
 

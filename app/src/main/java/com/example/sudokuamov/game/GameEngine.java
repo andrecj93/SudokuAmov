@@ -3,7 +3,6 @@ package com.example.sudokuamov.game;
 import android.content.Context;
 
 import com.example.sudokuamov.game.helpers.Levels;
-import com.example.sudokuamov.view.sudokuGrid.GameGrid;
 
 public class GameEngine {
     private static GameEngine instance;
