@@ -21,10 +21,12 @@ public class GameGrid {
         }
     }
 
-    public void setGrid(int[][] grid){
+    public void setSudokuCellsByIntArray(int[][] grid) {
         for (int x = 0; x < Configurations.GRID9; x++) {
             for (int y = 0; y < Configurations.GRID9; y++) {
                 sudokuCells[x][y].setInitValue(grid[x][y]);
+                //TODO CHANGE THIS BECAUSE WHEN THE ACTIVITY IS RESTORED THE ARRAY COMES WITH THE VALUES ALREADY CHANGED AND THEY ARE NOT ZERO ...
+                //TODO SO WE MIGHT NEED TO TRACK THE USERS MOVEMENT (HISTORY) AND THEN CHECK IF THEY WERE CHANGED. AND IF SO, DONT SET THOSE ONES TO NOT MODIFIABLE
                 if (grid[x][y] != 0)
                     sudokuCells[x][y].setNotModifiable();
             }
@@ -85,7 +87,7 @@ public class GameGrid {
             if (isAllCellsFilled())
             {
                 Toast.makeText(context, "Try again! That is not a correct solution.", Toast.LENGTH_LONG).show();
-                SudokuGenerator.getInstance().clearGrid(getSudokuCellsInteger());
+                //SudokuGenerator.getInstance().clearGrid(getSudokuCellsInteger());
             }
 
         }

@@ -2,4 +2,9 @@
 <resources>
     <string name="app_name">SudokuAmov</string>
     <string name="delete">Apagar</string>
+    <string name="single_player">Um Jogador</string>
+    <string name="two_players">Dois Jogadores</string>
+    <string name="hard">Hard</string>
+    <string name="medium">Medium</string>
+    <string name="easy">Easy</string>
 </resources>

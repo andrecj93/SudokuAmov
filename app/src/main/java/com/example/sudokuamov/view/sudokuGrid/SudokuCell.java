@@ -40,7 +40,7 @@ public class SudokuCell extends BaseSudokuCell {
     }
 
     private void drawLines(Canvas canvas) {
-        int strokePlayerMove = 4;
+        int strokePlayerMove = 7;
         final int width = getWidth();
         final int height = getHeight();
         int colorNotModifiableCell = Color.DKGRAY;
@@ -68,7 +68,7 @@ public class SudokuCell extends BaseSudokuCell {
         canvas.drawRect(0, 0, getWidth(), getHeight(), mPaint);
 
 
-        //Painting the regions with red color
+        //Painting the regions
         mPaint.setColor(colorRegions);
         mPaint.setStrokeWidth(11);
         if (getCellPosX() % 3 == 0) {

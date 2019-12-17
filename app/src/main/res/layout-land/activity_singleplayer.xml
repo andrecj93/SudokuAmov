@@ -4,36 +4,30 @@
     android:id="@+id/myConstraint"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="10dp"
-    android:paddingTop="20dp"
-    android:paddingRight="10dp"
-    android:paddingBottom="20dp">
+    android:layout_marginStart="11dp"
+    android:paddingTop="3dp">
 
     <com.example.sudokuamov.view.sudokuGrid.SudokuGridView
         android:id="@+id/sudokuGridView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:numColumns="9"
-        app:layout_constraintBottom_toTopOf="@+id/buttonGridView"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/buttonGridView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <com.example.sudokuamov.view.buttonsGrid.ButtonsGridView
         android:id="@+id/buttonGridView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="60dp"
         android:numColumns="3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline5" />
+        app:layout_constraintStart_toEndOf="@+id/sudokuGridView"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="400dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

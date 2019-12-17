@@ -8,11 +8,10 @@ public class GameEngine {
     private static GameEngine instance;
     private GameGrid grid = null;
     private Levels levels;
-
+    private int[][] sudokuSolution;
     private int selectedPosX = -1, selectedPosY = -1;
 
     public GameEngine() {
-
     }
 
     public static void resetGame() {
@@ -29,10 +28,14 @@ public class GameEngine {
     public void createSudokuGrid(Context context){
         int[][] Sudoku = SudokuGenerator.getInstance().generateGrid();
 
+        //Stored solution before removing values
+        this.sudokuSolution = Sudoku;
+
+        //Remove values to show the grid to the user
         Sudoku = SudokuGenerator.getInstance().removeValues(Sudoku, levels);
 
         grid = new GameGrid(context);
-        grid.setGrid(Sudoku);
+        grid.setSudokuCellsByIntArray(Sudoku);
     }
 
     public GameGrid getGrid(){
@@ -60,5 +63,9 @@ public class GameEngine {
         }
 
         grid.checkGame();
+    }
+
+    public void setGrid(GameGrid gameGrid) {
+        this.grid = gameGrid;
     }
 }
