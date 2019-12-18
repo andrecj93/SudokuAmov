@@ -4,7 +4,6 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.example.sudokuamov.game.helpers.Configurations;
-import com.example.sudokuamov.game.helpers.GameCell;
 import com.example.sudokuamov.view.sudokuGrid.SudokuCell;
 
 public class GameGrid {

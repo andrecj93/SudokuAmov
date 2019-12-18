@@ -38,6 +38,8 @@ public class SingleplayerActivity extends Activity {
             initBoard(true);
         } else {
             game.redrawGame(this);
+            printSudoku(game.getGrid().getSudokuCellsInteger());
+
         }
 
         /*else {
@@ -91,8 +93,8 @@ public class SingleplayerActivity extends Activity {
             game.createSudokuGrid(this);
         }
 
-
         printSudoku(game.getGrid().getSudokuCellsInteger());
+        game.printSolution();
     }
 
     private void printSudoku(int[][] sudokuGrid){

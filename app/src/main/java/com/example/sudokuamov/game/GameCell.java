@@ -1,4 +1,4 @@
-package com.example.sudokuamov.game.helpers;
+package com.example.sudokuamov.game;
 
 public class GameCell {
     private int value;

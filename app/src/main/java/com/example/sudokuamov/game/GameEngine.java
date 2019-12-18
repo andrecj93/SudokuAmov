@@ -3,7 +3,6 @@ package com.example.sudokuamov.game;
 import android.content.Context;
 
 import com.example.sudokuamov.game.helpers.Configurations;
-import com.example.sudokuamov.game.helpers.GameCell;
 import com.example.sudokuamov.game.helpers.Levels;
 
 import java.util.ArrayList;
@@ -130,11 +129,27 @@ public class GameEngine {
         grid.checkGame();
     }
 
+    public void printSolution() {
+        int[][] arr = new int[9][9];
+        System.out.println("---Sudoku Solution---");
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                arr[i][j] = getGameCell(j, i).getSolution();
+                System.out.print(arr[i][j] + "|");
+            }
+            System.out.println();
+        }
+
+    }
+
     public void setGrid(GameGrid gameGrid) {
         this.grid = gameGrid;
     }
 
     public boolean getEndOffGame() {
+        /*if (!SudokuChecker.getInstance().checkSudoku(getGrid().getSudokuCellsInteger()))
+            return false;*/
+
         for (GameCell gc : gameBoard) {
             if (gc.getValue() != gc.getSolution())
                 return false;
