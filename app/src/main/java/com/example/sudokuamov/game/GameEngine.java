@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.sudokuamov.game.helpers.Configurations;
 import com.example.sudokuamov.game.helpers.Levels;
+import com.example.sudokuamov.view.GameGrid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ public class GameEngine {
     private GameGrid grid = null;
     private Levels levels;
     private int selectedPosX = -1, selectedPosY = -1;
-    private static Object mutex = new Object();
+    private static final Object mutex = new Object();
     private List<GameCell> gameBoard;
 
     public GameEngine() {
@@ -23,14 +24,6 @@ public class GameEngine {
     public static void resetGame() {
         instance = null;
     }
-/*
-    public static GameEngine getInstance() {
-        if (instance == null)
-            instance = new GameEngine();
-
-        return instance;
-    }*/
-
 
     /*Local variable result seems unnecessary. But it’s there to improve the performance of our
      code. In cases where the instance is already initialized (most of the time), the volatile
@@ -102,6 +95,20 @@ public class GameEngine {
         return gameBoard;
     }
 
+    private int[][] getGameBoardArray() {
+        int[][] gameArray = new int[Configurations.GRID9][Configurations.GRID9];
+        for (int x = 0; x < Configurations.GRID9; x++) {
+            for (int y = 0; y < Configurations.GRID9; y++) {
+                gameArray[x][y] = getGameCell(x, y).getValue();
+            }
+        }
+        return gameArray;
+    }
+
+    public boolean checkNewNumberFill(int x, int y, int number) {
+        return SudokuSolver.isSafe(this.getGameBoardArray(), x, y, number);
+    }
+
     public GameGrid getGrid(){
         return grid;
     }
@@ -128,6 +135,14 @@ public class GameEngine {
 
         grid.checkGame();
     }
+
+    public void GetPosssibleNumber() {
+        if (selectedPosX != -1 && selectedPosY != -1) {
+            grid.getHelp(selectedPosX, selectedPosY);
+        }
+
+    }
+
 
     public void printSolution() {
         int[][] arr = new int[9][9];

@@ -4,9 +4,9 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-import androidx.appcompat.widget.AppCompatButton;
-
 import com.example.sudokuamov.game.GameEngine;
+
+import androidx.appcompat.widget.AppCompatButton;
 
 public class NumberButton extends AppCompatButton implements View.OnClickListener
 {
@@ -20,7 +20,10 @@ public class NumberButton extends AppCompatButton implements View.OnClickListene
     @Override
     public void onClick(View v)
     {
-        GameEngine.getInstance().setNumber(number);
+        if (number >= 0)
+            GameEngine.getInstance().setNumber(number);
+        else
+            GameEngine.getInstance().GetPosssibleNumber();
     }
 
     public void setNumber(int number) {

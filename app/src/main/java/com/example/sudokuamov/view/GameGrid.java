@@ -1,10 +1,15 @@
-package com.example.sudokuamov.game;
+package com.example.sudokuamov.view;
 
 import android.content.Context;
 import android.widget.Toast;
 
+import com.example.sudokuamov.game.GameCell;
+import com.example.sudokuamov.game.GameEngine;
 import com.example.sudokuamov.game.helpers.Configurations;
 import com.example.sudokuamov.view.sudokuGrid.SudokuCell;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameGrid {
 
@@ -46,6 +51,15 @@ public class GameGrid {
         return sudokuCells[x][y];
     }
 
+
+    public void getHelp(int x, int y) {
+        for (int i = 1; i < 10; i++)
+            if (gameEngine.checkNewNumberFill(x, y, i)) {
+                Toast.makeText(context, "Um Numero possivel é [" + i + "]", Toast.LENGTH_LONG).show();
+                break;
+            }
+    }
+
     public SudokuCell getItem(int position)
     {
         int x = position % 9;
@@ -54,11 +68,28 @@ public class GameGrid {
         return sudokuCells[x][y];
     }
 
-    public void setItem(int x, int y, int number)
-    {
-        sudokuCells[x][y].setValue(number);
 
-        gameEngine.getGameCell(x, y).setValue(number);
+    public void setItem(final int x, final int y, final int number)
+    {
+        if (sudokuCells[x][y].isRed()) {
+            Toast.makeText(context, "Wait 3 sec After a Fail.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        sudokuCells[x][y].setValue(number);
+        if (gameEngine.checkNewNumberFill(x, y, number))
+            gameEngine.getGameCell(x, y).setValue(number);
+        else {
+            sudokuCells[x][y].setRed();
+
+            TimerTask task = new TimerTask() {
+                @Override
+                public void run() {
+                    sudokuCells[x][y].setValue(0);
+                }
+            };
+            new Timer().schedule(task, 3000);
+        }
 
 
         this.checkGame();

@@ -117,7 +117,6 @@ public class SudokuGenerator {
         return checkHorizontalConflict(sudokuGrid, xPos, yPos, number) || checkVerticalConflict(sudokuGrid, xPos, yPos, number) || checkRegionConflict(sudokuGrid, xPos, yPos, number);
     }
 
-
     /**
      * @return Return true if there is a conflict
      */

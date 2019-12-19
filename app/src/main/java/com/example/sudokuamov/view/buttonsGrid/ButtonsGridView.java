@@ -2,7 +2,6 @@ package com.example.sudokuamov.view.buttonsGrid;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +32,7 @@ public class ButtonsGridView extends GridView
 
         @Override
         public int getCount() {
-            return 10;
+            return 11;
         }
 
         @Override
@@ -60,15 +59,18 @@ public class ButtonsGridView extends GridView
                 btn.setTextSize(15);
                 btn.setId(position);
 
-                if (position !=9)
+                if (position < 9)
                 {
                     btn.setText(String.valueOf(position+1));
                     btn.setNumber(position+1);
-                } else
-                {
+                } else if (position == 9) {
                     btn.setText(R.string.delete);
                     btn.setNumber(0);
+                } else {
+                    btn.setText("Help");
+                    btn.setNumber(-1);
                 }
+
                 return btn;
             }
 

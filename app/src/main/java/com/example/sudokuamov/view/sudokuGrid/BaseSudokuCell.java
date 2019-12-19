@@ -7,6 +7,7 @@ public class BaseSudokuCell extends View {
 
     private int value;
     private boolean isModifiable = true;
+    private boolean isRed = false;
     private int cellPosX, cellPosY;
 
     public BaseSudokuCell(Context context) {
@@ -22,6 +23,17 @@ public class BaseSudokuCell extends View {
         if (isModifiable)
             this.value = value;
 
+        isRed = false;
+
+        invalidate();
+    }
+
+    public boolean isRed() {
+        return isRed;
+    }
+
+    public void setRed() {
+        isRed = true;
         invalidate();
     }
 

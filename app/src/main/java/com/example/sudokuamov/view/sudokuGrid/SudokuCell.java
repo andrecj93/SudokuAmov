@@ -27,9 +27,14 @@ public class SudokuCell extends BaseSudokuCell {
     }
 
     private void drawNumber(Canvas canvas) {
-        mPaint.setColor(Color.BLACK);
+        if (isRed())
+            mPaint.setColor(Color.RED);
+        else
+            mPaint.setColor(Color.BLACK);
+
         mPaint.setTextSize(60);
         mPaint.setStyle(Paint.Style.FILL);
+
         //Rect bounds = new Rect();
         mPaint.getTextBounds(String.valueOf(getValue()), 0, String.valueOf(getValue()).length(), bounds);
 
