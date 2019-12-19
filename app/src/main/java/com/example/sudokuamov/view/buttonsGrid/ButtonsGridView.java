@@ -67,7 +67,7 @@ public class ButtonsGridView extends GridView
                     btn.setText(R.string.delete);
                     btn.setNumber(0);
                 } else {
-                    btn.setText("Help");
+                    btn.setText(R.string.help);
                     btn.setNumber(-1);
                 }
 

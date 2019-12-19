@@ -101,6 +101,7 @@ public class SudokuCell extends BaseSudokuCell {
             mPaint.setColor(Color.LTGRAY);
             mPaint.setStyle(Paint.Style.FILL);
 
+
             canvas.drawRect(0, 0,width, height, mPaint);
         }
 

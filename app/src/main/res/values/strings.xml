@@ -1,9 +1,20 @@
 <resources>
-    <string name="app_name">SudokuAmov</string>
+    <string name="app_name" translatable="false">Sudoku App</string>
     <string name="delete">Delete</string>
     <string name="single_player">Single Player</string>
     <string name="two_players">Two Players</string>
     <string name="hard">Hard</string>
     <string name="medium">Medium</string>
     <string name="easy">Easy</string>
+    <string name="nickname">Nickname</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="help">Help</string>
+    <string name="register">Register</string>
+    <string name="take_picture">Take Picture</string>
+    <string name="continue_str">Continue</string>
+    <string name="no_camera_found">No camera was found</string>
+    <string name="str_photo_saved">Your Photo has been saved with sucess!</string>
+    <string name="str_take_another_picture">Take a new picture</string>
 </resources>

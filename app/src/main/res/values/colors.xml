@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">@color/blueSapphire</color>
+    <color name="colorPrimaryDark">@color/yankeesBlue</color>
+    <color name="colorAccent">@color/blueGreen</color>
+    <color name="mustard">#FFC857</color>
+    <color name="yankeesBlue">#1F2041</color>
+    <color name="independence">#4B3F72</color>
+    <color name="blueGreen">#119DA4</color>
+    <color name="blueSapphire">#19647E</color>
+
 </resources>

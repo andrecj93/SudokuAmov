@@ -165,12 +165,12 @@ public class GameEngine {
         /*if (!SudokuChecker.getInstance().checkSudoku(getGrid().getSudokuCellsInteger()))
             return false;*/
 
-        for (GameCell gc : gameBoard) {
+        /*for (GameCell gc : gameBoard) {
             if (gc.getValue() != gc.getSolution())
                 return false;
-        }
-
-        return true;
+        }*/
+        int length = getGameBoardArray().length;
+        return SudokuSolver.solveSudoku(getGameBoardArray(), length);
     }
 
 }

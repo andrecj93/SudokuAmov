@@ -91,7 +91,6 @@ public class GameGrid {
             new Timer().schedule(task, 3000);
         }
 
-
         this.checkGame();
     }
 
