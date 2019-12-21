@@ -62,17 +62,17 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
             imgUser.setImageBitmap(photo);
         } else {
             imgUser.setImageResource(R.drawable.userphoto);
-            imgUser.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(MenuActivity.this, ProfileActivity.class);
-                    intent.putExtra("userName", userName);
-                    startActivity(intent);
-                }
-            });
         }
 
-
+        imgUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MenuActivity.this, ProfileActivity.class);
+                intent.putExtra("userName", userName);
+                intent.putExtra("userReallyWantsPicture", true);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

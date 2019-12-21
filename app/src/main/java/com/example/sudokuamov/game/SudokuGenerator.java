@@ -154,12 +154,16 @@ public class SudokuGenerator {
 
     public int getLevel(Levels levels){
         switch (levels) {
+            case VERYEASY:
+                return Configurations.VERYEASY;
             case EASY:
                 return Configurations.EASY;
             case MEDIUM:
                 return Configurations.MEDIUM;
-            default:
+            case HARD:
                 return Configurations.HARD;
+            default:
+                return Configurations.VERYHARD;
         }
     }
 

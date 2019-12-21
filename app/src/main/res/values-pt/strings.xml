@@ -17,4 +17,7 @@
     <string name="str_photo_saved">A sua foto foi guardada com sucesso!</string>
     <string name="str_take_another_picture">Tirar uma nova fotografia</string>
     <string name="hello">Olá</string>
+    <string name="veryHard">Muito Difícil</string>
+    <string name="newbie">Principiante</string>
+    <string name="str_choose_level">Por favor, escolha o seu nível de dificuldade</string>
 </resources>

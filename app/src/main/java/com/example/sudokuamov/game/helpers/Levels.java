@@ -1,30 +1,40 @@
 package com.example.sudokuamov.game.helpers;
 
 public enum Levels {
+    VERYEASY,
     EASY,
     MEDIUM,
-    HARD;
+    HARD,
+    VERYHARD;
 
 
     public static Levels fromInteger(int x) {
         switch (x) {
             case 0:
-                return EASY;
+                return VERYEASY;
             case 1:
+                return EASY;
+            case 2:
                 return MEDIUM;
-            default:
+            case 3:
                 return HARD;
+            default:
+                return VERYHARD;
         }
     }
 
     public static int intToEnum(Levels x) {
         switch (x) {
-            case EASY:
+            case VERYEASY:
                 return 0;
-            case MEDIUM:
+            case EASY:
                 return 1;
-            default:
+            case MEDIUM:
                 return 2;
+            case HARD:
+                return 3;
+            default:
+                return 4;
         }
     }
 }

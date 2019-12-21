@@ -39,11 +39,19 @@ import androidx.core.app.ActivityCompat;
 import com.example.sudokuamov.MenuActivity;
 import com.example.sudokuamov.R;
 import com.example.sudokuamov.activities.helpers.HelperMethods;
+import com.example.sudokuamov.game.Profile;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -144,6 +152,11 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         textureView = findViewById(R.id.textureViewUserImage);
         editTextNick = findViewById(R.id.nickName);
+        Intent intent = getIntent();
+
+        boolean userWantsPhoto = intent.getBooleanExtra("userReallyWantsPicture", false);
+        if (!userWantsPhoto)
+            loadJsonContents();
 
         assert textureView != null;
 
@@ -163,12 +176,69 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         btnNext.setOnClickListener(this);
         btnCapture.setOnClickListener(this);
 
-        Intent intent = getIntent();
         //The user pressed back or wanted a new photo
         String name = intent.getStringExtra("userName");
         if (name != null)
             editTextNick.setText(intent.getStringExtra("userName"));
 
+    }
+
+    private void loadJsonContents() {
+        //Profile profile = new Profile(userName);
+        String pathName = getExternalFilesDir(null) + "/" + "userData" + ".json";
+        Gson gson = new Gson();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(pathName));
+
+            //Convert json string back to object
+            Profile profile = gson.fromJson(bufferedReader, Profile.class);
+
+            if (profile != null) {
+                userName = profile.getUsername();
+                userPhotoThumbNail = profile.getUserPhotoThumbnailPath();
+                userPhotoPath = profile.getUserPhotoPath();
+
+                if (userName != null) {
+                    if (!userName.equals("")) {
+                        editTextNick.setText(userName);
+                    }
+                }
+
+                startActivity(HelperMethods.makeIntentForUserNameAndPhoto(
+                        new String[]{userName, userPhotoPath, userPhotoThumbNail},
+                        this,
+                        MenuActivity.class));
+                finish();
+
+                if (userPhotoThumbNail.equals("")) {
+                    Toast.makeText(this, "You don't have a photo yet, take one if you want or just click continue!", Toast.LENGTH_SHORT).show();
+                } else {
+
+                }
+            }
+        } catch (FileNotFoundException e) {
+            Toast.makeText(this, "You don't have a profile yet. Take a picture and fill your nickname!", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private void saveJsonContents() {
+        String pathName = getExternalFilesDir(null) + "/" + "userData" + ".json";
+
+        if (userPhotoPath == null || userPhotoThumbNail == null) {
+            userPhotoPath = "";
+            userPhotoThumbNail = "";
+        }
+
+        Profile userProfile = new Profile(userName, userPhotoPath, userPhotoThumbNail);
+
+        try (Writer writer = new FileWriter(pathName)) {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            gson.toJson(userProfile, writer);
+        } catch (IOException e) {
+            Toast.makeText(this, "Error saving user profile", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -187,6 +257,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                     imm.showSoftInput(editTextNick, 0);
 
                 } else {
+                    saveJsonContents();
                     startActivity(HelperMethods.makeIntentForUserNameAndPhoto(
                             new String[]{userName, userPhotoPath, userPhotoThumbNail},
                             ProfileActivity.this,
@@ -392,8 +463,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
             assert manager != null;
-            cameraId = manager.getCameraIdList()[0];
+            if (manager.getCameraIdList()[1] != "") {
+                cameraId = manager.getCameraIdList()[1];
+            } else
+                cameraId = manager.getCameraIdList()[0];
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
+
             StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             assert map != null;
             imageDimension = map.getOutputSizes(ImageFormat.JPEG)[0];
@@ -407,6 +482,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                 }, REQUEST_CAMERA_PERMISSION);
                 return;
             }
+
 
             manager.openCamera(cameraId, stateCallback, null);
 
