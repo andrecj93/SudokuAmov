@@ -3,6 +3,8 @@
     <color name="colorPrimary">@color/blueSapphire</color>
     <color name="colorPrimaryDark">@color/yankeesBlue</color>
     <color name="colorAccent">@color/blueGreen</color>
+
+    <!--Color Palette!-->
     <color name="mustard">#FFC857</color>
     <color name="yankeesBlue">#1F2041</color>
     <color name="independence">#4B3F72</color>

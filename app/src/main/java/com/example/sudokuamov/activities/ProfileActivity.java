@@ -32,7 +32,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -40,7 +39,6 @@ import androidx.core.app.ActivityCompat;
 import com.example.sudokuamov.MenuActivity;
 import com.example.sudokuamov.R;
 import com.example.sudokuamov.activities.helpers.HelperMethods;
-
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -64,8 +62,10 @@ import java.util.List;
  *
  *
  * */
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String DEBUG_TAG = "ProfileActivity";
+
+    public static final int DELAY_AFTER_PICTURE = 500;
 
     //Check state orientation of output image
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -146,41 +146,62 @@ public class ProfileActivity extends AppCompatActivity {
         editTextNick = findViewById(R.id.nickName);
 
         assert textureView != null;
-        textureView.setSurfaceTextureListener(textureListener);
+
+        //Its a restored activity
+        if (savedInstanceState != null) {
+            //Whats in the state
+            boolean isTextureAvailable = savedInstanceState.getBoolean("textureViewAvailable");
+            if (isTextureAvailable) {
+                openCamera();
+            } else
+                textureView.setSurfaceTextureListener(textureListener);
+        } else
+            textureView.setSurfaceTextureListener(textureListener);
 
         btnCapture = findViewById(R.id.btnCapture);
-        btnCapture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takePicture();
-            }
-        });
-
         btnNext = findViewById(R.id.registerBtn);
+        btnNext.setOnClickListener(this);
+        btnCapture.setOnClickListener(this);
 
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        Intent intent = getIntent();
+        //The user pressed back or wanted a new photo
+        String name = intent.getStringExtra("userName");
+        if (name != null)
+            editTextNick.setText(intent.getStringExtra("userName"));
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.registerBtn: {
                 userName = editTextNick.getText().toString();
 
                 if (userName.isEmpty()) {
                     editTextNick.setFocusable(true);
                     editTextNick.requestFocus();
                     editTextNick.setBackgroundColor(getResources().getColor(R.color.mustard, null));
+                    //editTextNick.setText("Please fill your nickname");
                     InputMethodManager imm = (InputMethodManager) getSystemService(Service.INPUT_METHOD_SERVICE);
                     assert imm != null;
                     imm.showSoftInput(editTextNick, 0);
+
                 } else {
-                    Intent intent = new Intent(ProfileActivity.this, MenuActivity.class);
-                    intent.putExtra("nickName", userName);
-                    intent.putExtra("userPhotoPath", userPhotoPath);
-                    intent.putExtra("userPhotoThumbPath", userPhotoThumbNail);
-                    startActivity(intent);
+                    startActivity(HelperMethods.makeIntentForUserNameAndPhoto(
+                            new String[]{userName, userPhotoPath, userPhotoThumbNail},
+                            ProfileActivity.this,
+                            MenuActivity.class));
                 }
 
-
+                break;
             }
-        });
+            case R.id.btnCapture: {
+                takePicture();
+                break;
+            }
+            default:
+                break;
+        }
 
     }
 
@@ -189,19 +210,23 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
-            CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraDevice.getId());
+            CameraCharacteristics characteristics = null;
+            if (manager != null) {
+                characteristics = manager.getCameraCharacteristics(cameraDevice.getId());
+            }
             Size[] jpegSizes = null;
-            if (characteristics != null)
+            if (characteristics != null) {
                 jpegSizes = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
                         .getOutputSizes(ImageFormat.JPEG);
+            }
 
             //Capture image with custom size
-            int width = 640;
-            int height = 480;
-            if (jpegSizes != null && jpegSizes.length > 0) {
+            int width = 100;
+            int height = 100;
+            /*if (jpegSizes != null && jpegSizes.length > 0) {
                 width = jpegSizes[0].getWidth();
                 height = jpegSizes[0].getHeight();
-            }
+            }*/
             final ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
             List<Surface> outputSurface = new ArrayList<>(2);
             outputSurface.add(reader.getSurface());
@@ -219,7 +244,7 @@ public class ProfileActivity extends AppCompatActivity {
             String photoName = "userPhoto"; //UUID.randomUUID().toString()
             String pathName = getExternalFilesDir(null) + "/" + photoName + ".jpg";
             file = new File(pathName);
-            this.userPhotoPath = pathName;
+            userPhotoPath = pathName;
 
 
             //Sets the listener for the reader of the image when the image becomes available to save
@@ -235,14 +260,7 @@ public class ProfileActivity extends AppCompatActivity {
                         buffer.get(bytes);
                         save(bytes);
 
-                        try {
-                            //Tring to resize the image
-                            String pathNameThumbnail = getExternalFilesDir(null) + "/userPhoto_thumb.jpg";
-                            userPhotoThumbNail = pathNameThumbnail;
-                            HelperMethods.ResizeImages(userPhotoPath, pathNameThumbnail);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
@@ -268,13 +286,14 @@ public class ProfileActivity extends AppCompatActivity {
 
             };
 
-
             reader.setOnImageAvailableListener(readerListener, mBackgroundHandler);
+
+
             final CameraCaptureSession.CaptureCallback captureListener = new CameraCaptureSession.CaptureCallback() {
                 @Override
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    btnCapture.setText("Saving...");
+                    findViewById(R.id.btnCapture).animate().rotationBy(360);
 
                     mBackgroundHandler.postDelayed(new Runnable() {
                         @Override
@@ -282,10 +301,29 @@ public class ProfileActivity extends AppCompatActivity {
                             Toast.makeText(ProfileActivity.this, getString(R.string.str_photo_saved) + " " + file, Toast.LENGTH_LONG).show();
                             createCameraPreview();
 
-                            btnCapture.setText(R.string.str_take_another_picture);
+                            try {
+                                //Trying to resize the image
+                                String pathNameThumbnail = getExternalFilesDir(null) + "/userPhoto_thumb.jpg";
+                                userPhotoThumbNail = pathNameThumbnail;
+                                HelperMethods.ResizeImages(userPhotoPath, pathNameThumbnail);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Toast.makeText(ProfileActivity.this, "Error writing thumbnail", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }, DELAY_AFTER_PICTURE);
+                    //btnCapture.setText(R.string.str_take_another_picture);
+
+                   /* mBackgroundHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(ProfileActivity.this, getString(R.string.str_photo_saved) + " " + file, Toast.LENGTH_LONG).show();
+
+                            createCameraPreview();
 
                         }
-                    }, 500);
+                    }, DELAY_AFTER_PICTURE);*/
+
 
                 }
             };
@@ -358,12 +396,14 @@ public class ProfileActivity extends AppCompatActivity {
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
             StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             assert map != null;
-            imageDimension = map.getOutputSizes(ImageFormat.YUV_420_888)[0];
+            imageDimension = map.getOutputSizes(ImageFormat.JPEG)[0];
+
             //Check realtime permission if run higher API 23
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{
                         Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
                 }, REQUEST_CAMERA_PERMISSION);
                 return;
             }
@@ -408,11 +448,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-
-        //TODO HANDLE ROTATION BEM E HANDLE INTENT NEXT SCREEN
-        outState.putInt("textureViewAvailable", textureView.isAvailable() ? 1 : 0);
+        outState.putBoolean("textureViewAvailable", textureView.isAvailable());
         super.onSaveInstanceState(outState);
-
     }
 
     @Override
@@ -449,5 +486,6 @@ public class ProfileActivity extends AppCompatActivity {
         mBackgroundThread.start();
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
     }
+
 
 }

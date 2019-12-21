@@ -6,8 +6,8 @@
     <string name="hard">Hard</string>
     <string name="medium">Medium</string>
     <string name="easy">Easy</string>
-    <string name="nickname">Nickname</string>
-    <string name="email">Email</string>
+    <string name="nickname">Username</string>
+    <string name="email" translatable="false">Email</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="help">Help</string>
@@ -17,4 +17,5 @@
     <string name="no_camera_found">No camera was found</string>
     <string name="str_photo_saved">Your Photo has been saved with sucess!</string>
     <string name="str_take_another_picture">Take a new picture</string>
+    <string name="hello">Hello</string>
 </resources>

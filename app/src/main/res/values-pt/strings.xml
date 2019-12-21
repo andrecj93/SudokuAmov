@@ -7,7 +7,6 @@
     <string name="medium">Médio</string>
     <string name="easy">Fácil</string>
     <string name="nickname">Nome de jogador</string>
-    <string name="email">Email</string>
     <string name="password">Palavra-passe</string>
     <string name="confirm_password">Confirmar Palavra-passe</string>
     <string name="help">Ajuda</string>
@@ -17,4 +16,5 @@
     <string name="no_camera_found">Não foi encontrada nenhuma câmera</string>
     <string name="str_photo_saved">A sua foto foi guardada com sucesso!</string>
     <string name="str_take_another_picture">Tirar uma nova fotografia</string>
+    <string name="hello">Olá</string>
 </resources>
