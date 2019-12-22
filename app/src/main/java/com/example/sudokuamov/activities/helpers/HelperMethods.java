@@ -15,10 +15,13 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import androidx.annotation.RequiresApi;
+
 public final class HelperMethods {
     private static final int RESIZED_WIDTH = 100;
     private static final int RESIZED_HEIGHT = 100;
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public static void ResizeImages(String sPath, String sTo) throws IOException {
 
         Bitmap photo = null;

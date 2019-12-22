@@ -9,12 +9,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.sudokuamov.activities.ProfileActivity;
 import com.example.sudokuamov.activities.helpers.HelperMethods;
 
 import java.io.File;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -88,7 +88,12 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.buttonTwoPlayer: {
-                // do something for button 2 click
+                Intent intent = HelperMethods.makeIntentForUserNameAndPhoto(new String[]{userName, userPhoto, userPhotoThumb},
+                        this, LevelsActivity.class);
+                //new Intent(this, LevelsActivity.class);
+                intent.putExtra("Mode", "multiplayer");
+
+                startActivity(intent);
                 break;
             }
             default:

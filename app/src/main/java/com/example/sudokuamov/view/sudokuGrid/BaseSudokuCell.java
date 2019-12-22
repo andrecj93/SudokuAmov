@@ -13,6 +13,7 @@ public class BaseSudokuCell extends View {
     public BaseSudokuCell(Context context) {
         super(context);
     }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         //noinspection SuspiciousNameCombination

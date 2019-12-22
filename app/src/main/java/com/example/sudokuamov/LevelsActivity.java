@@ -10,13 +10,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.sudokuamov.activities.ProfileActivity;
 import com.example.sudokuamov.activities.helpers.HelperMethods;
 import com.example.sudokuamov.game.helpers.Levels;
 
 import java.io.File;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class LevelsActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -96,6 +96,7 @@ public class LevelsActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         Intent intent = HelperMethods.makeIntentForUserNameAndPhoto(new String[]{userName, userPhoto, userPhotoThumb},
                 this, SingleplayerActivity.class);
+
         intent.putExtra("Mode", mode);
 
         switch (view.getId()) {

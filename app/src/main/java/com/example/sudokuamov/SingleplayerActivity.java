@@ -1,17 +1,19 @@
 package com.example.sudokuamov;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.example.sudokuamov.game.GameEngine;
 import com.example.sudokuamov.game.helpers.Configurations;
 import com.example.sudokuamov.game.helpers.Levels;
-import com.google.gson.Gson;
+import com.example.sudokuamov.view.GameGrid;
+import com.example.sudokuamov.view.PlayerView;
 
-import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
-public class SingleplayerActivity extends Activity {
+public class SingleplayerActivity extends AppCompatActivity {
     //Singleton to run for the entire game
     private GameEngine game;
     String mode, jsonGameObject;
@@ -21,7 +23,6 @@ public class SingleplayerActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_singleplayer);
-
 
         game = GameEngine.getInstance();
 
@@ -34,32 +35,17 @@ public class SingleplayerActivity extends Activity {
             //Intent for difficulty passed from the level activity
             difficulty = intent.getIntExtra("Difficulty", 0);
 
-            //Should get a new instance
+            game.setGameMode(mode);
+
             initBoard(true);
         } else {
-            game.redrawGame(this);
-            printSudoku(game.getGrid().getSudokuCellsInteger());
+
+            initBoard(false);
 
         }
-
-        /*else {
-            //Activity was already created and we should get the values we need from the saved instance state
-
-            jsonGameObject = savedInstanceState.getString("gameObject");
-            mode = savedInstanceState.getString("Mode");
-            difficulty = savedInstanceState.getInt("Difficulty", 0);
-
-
-            Type listType = new TypeToken<ArrayList<GameCell>>(){}.getType();
-            List<GameCell> gameCells = new Gson().fromJson(jsonGameObject, listType);
-
-
-            game.createSudokuGrid(this, gameCells);
-        }*/
-
     }
 
-
+/*
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putString("gameObject", new Gson().toJson(game.getGameBoard()));
@@ -69,6 +55,7 @@ public class SingleplayerActivity extends Activity {
 
         super.onSaveInstanceState(outState);
     }
+*/
 
     @Override
     public void onBackPressed() {
@@ -81,16 +68,37 @@ public class SingleplayerActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
+        game = GameEngine.getInstance();
+
         initBoard(false);
     }
 
 
+
     private void initBoard(boolean start) {
-        game = GameEngine.getInstance();
+        TextView playerNameDisplay = findViewById(R.id.username);
+        TextView timerDisplay = findViewById(R.id.time);
+        TextView pointsDisplay = findViewById(R.id.points);
+
+
+        final PlayerView playerView = new PlayerView(playerNameDisplay, pointsDisplay, timerDisplay);
+
+        GameGrid gameGrid = new GameGrid(this, game, playerView);
+
+
+        gameGrid.setObserver(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                playerView.RefreshPlayerView();
+            }
+        });
 
         if (start) {
             game.setLevels(Levels.fromInteger(difficulty));
-            game.createSudokuGrid(this);
+
+            game.createSudokuGrid(gameGrid);
+        } else {
+            game.redrawGame(gameGrid);
         }
 
         printSudoku(game.getGrid().getSudokuCellsInteger());
@@ -108,4 +116,5 @@ public class SingleplayerActivity extends Activity {
             System.out.println();
         }
     }
+
 }

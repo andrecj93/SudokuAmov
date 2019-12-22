@@ -1,13 +1,14 @@
 package com.example.sudokuamov.game;
 
-import android.content.Context;
-
 import com.example.sudokuamov.game.helpers.Configurations;
+import com.example.sudokuamov.game.helpers.GameMode;
 import com.example.sudokuamov.game.helpers.Levels;
 import com.example.sudokuamov.view.GameGrid;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameEngine {
     private static GameEngine instance;
@@ -16,9 +17,37 @@ public class GameEngine {
     private int selectedPosX = -1, selectedPosY = -1;
     private static final Object mutex = new Object();
     private List<GameCell> gameBoard;
+    private GameMode gameMode;
+    private List<Profile> players;
+    private Timer timer;
+    private int countDown;
 
     public GameEngine() {
         gameBoard = new ArrayList<>();
+        countDown = 30;
+    }
+
+
+    private TimerTask getTimerTask() {
+        final TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                GameEngine gameEngine = GameEngine.getInstance();
+                gameEngine.setCountDown(gameEngine.getCountDown() - 1);
+            }
+        };
+
+        return timerTask;
+    }
+
+    public int getCountDown() {
+        return countDown;
+    }
+
+    public void setCountDown(int countDown) {
+        this.countDown = countDown;
+        grid.setTime(countDown);
+        timer.schedule(getTimerTask(), 1 * 1000);
     }
 
     public static void resetGame() {
@@ -43,8 +72,7 @@ public class GameEngine {
     }
 
 
-
-    public void createSudokuGrid(Context context){
+    public void createSudokuGrid(GameGrid gameGrid) {
         synchronized (mutex) {
             int[][] sudokuSolution = new int[Configurations.GRID9][Configurations.GRID9];
             int[][] Sudoku = SudokuGenerator.getInstance().generateGrid();
@@ -66,21 +94,22 @@ public class GameEngine {
                 }
             }
 
-            grid = new GameGrid(context, this);
+            grid = gameGrid;
+
             grid.setSudokuCellsByIntArray();
         }
     }
-
-    public void createSudokuGrid(Context context, List<GameCell> gameBoard) {
+/*
+    public void createSudokuGrid(Context context, List<GameCell> gameBoard, GameGrid gameGrid  ) {
 
         this.gameBoard = gameBoard;
+        grid = gameGrid;
 
-        grid = new GameGrid(context, this);
         grid.setSudokuCellsByIntArray();
-    }
+    }*/
 
-    public void redrawGame(Context context) {
-        grid = new GameGrid(context, this);
+    public void redrawGame(GameGrid gameGrid) {
+        grid = gameGrid;
         grid.setSudokuCellsByIntArray();
     }
 
@@ -143,6 +172,31 @@ public class GameEngine {
 
     }
 
+    public GameMode getGameMode() {
+        return gameMode;
+    }
+
+    public void setGameMode(String mode) {
+        switch (mode) {
+            case "networkgame":
+                gameMode = GameMode.MULTIPLAYER_MULTIDEVICE;
+                timer = new Timer();
+                countDown = 30;
+                timer.schedule(getTimerTask(), 1 * 1000);
+                break;
+            case "multiplayer":
+                gameMode = GameMode.MULTIPLAYER_SAMEDEVICE;
+                timer = new Timer();
+                countDown = 30;
+                timer.schedule(getTimerTask(), 1 * 1000);
+                break;
+            default:
+                gameMode = GameMode.SINGLEPLAYER;
+                timer = new Timer();
+                countDown = 30;
+                timer.schedule(getTimerTask(), 1 * 1000);
+        }
+    }
 
     public void printSolution() {
         int[][] arr = new int[9][9];
@@ -172,5 +226,4 @@ public class GameEngine {
         int length = getGameBoardArray().length;
         return SudokuSolver.solveSudoku(getGameBoardArray(), length);
     }
-
 }

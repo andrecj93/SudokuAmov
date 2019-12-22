@@ -11,22 +11,33 @@ import com.example.sudokuamov.view.sudokuGrid.SudokuCell;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+
 public class GameGrid {
 
     private SudokuCell[][] sudokuCells = new SudokuCell[Configurations.GRID9][Configurations.GRID9];
     private Context context;
     private GameEngine gameEngine = null;
+    PlayerView playerView;
+    MutableLiveData<Boolean> changedPayer = new MutableLiveData<>();
 
-    public GameGrid(Context context, GameEngine gameEngine)
+    public GameGrid(Context context, GameEngine gameEngine, PlayerView playerView)
     {
         this.context = context;
         this.gameEngine = gameEngine;
+        this.playerView = playerView;
 
         for (int x = 0; x < Configurations.GRID9; x++) {
             for (int y = 0; y < Configurations.GRID9; y++) {
                 sudokuCells[x][y] = new SudokuCell(context);
             }
         }
+    }
+
+    public void setObserver(LifecycleOwner lifecycleOwner, Observer<Boolean> observer) {
+        changedPayer.observe(lifecycleOwner, observer);
     }
 
     public void setSudokuCellsByIntArray() {
@@ -125,6 +136,26 @@ public class GameGrid {
                 Toast.makeText(context, "Well Done! That is the correct solution.", Toast.LENGTH_LONG).show();
             else
                 Toast.makeText(context, "Try again! That is not a correct solution.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    public void setPoints(int points) {
+        if (this.playerView != null)
+            this.playerView.setPoints(points);
+    }
+
+
+    public void setPlayerName(String name) {
+        if (this.playerView != null)
+            this.playerView.setName(name);
+    }
+
+
+    public void setTime(int time) {
+        if (this.playerView != null) {
+            this.playerView.setTimer(time);
+            changedPayer.postValue(true);
         }
     }
 }
