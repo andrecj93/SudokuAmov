@@ -210,11 +210,9 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         MenuActivity.class));
                 finish();
 
-                if (userPhotoThumbNail.equals("")) {
+                /*if (userPhotoThumbNail.equals("")) {
                     Toast.makeText(this, "You don't have a photo yet, take one if you want or just click continue!", Toast.LENGTH_SHORT).show();
-                } else {
-
-                }
+                }*/
             }
         } catch (FileNotFoundException e) {
             Toast.makeText(this, "You don't have a profile yet. Take a picture and fill your nickname!", Toast.LENGTH_SHORT).show();
@@ -370,10 +368,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                         @Override
                         public void run() {
                             Toast.makeText(ProfileActivity.this, getString(R.string.str_photo_saved) + " " + file, Toast.LENGTH_LONG).show();
+
+                            //Creates the camera Preview on the texture surface again
                             createCameraPreview();
 
+                            //Trying to resize the image
                             try {
-                                //Trying to resize the image
                                 String pathNameThumbnail = getExternalFilesDir(null) + "/userPhoto_thumb.jpg";
                                 userPhotoThumbNail = pathNameThumbnail;
                                 HelperMethods.ResizeImages(userPhotoPath, pathNameThumbnail);
@@ -383,19 +383,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
                             }
                         }
                     }, DELAY_AFTER_PICTURE);
-                    //btnCapture.setText(R.string.str_take_another_picture);
-
-                   /* mBackgroundHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(ProfileActivity.this, getString(R.string.str_photo_saved) + " " + file, Toast.LENGTH_LONG).show();
-
-                            createCameraPreview();
-
-                        }
-                    }, DELAY_AFTER_PICTURE);*/
-
-
                 }
             };
 

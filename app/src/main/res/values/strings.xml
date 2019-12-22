@@ -21,4 +21,6 @@
     <string name="veryHard">Very Hard</string>
     <string name="newbie">Newbie</string>
     <string name="str_choose_level">Please choose your difficulty level</string>
+    <string name="points">Points</string>
+    <string name="save_game">Save Game</string>
 </resources>

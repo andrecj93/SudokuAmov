@@ -50,7 +50,7 @@ public class SudokuCell extends BaseSudokuCell {
         final int height = getHeight();
         int colorNotModifiableCell = Color.DKGRAY;
         int colorModifiableCell = Color.BLUE;
-        int colorRegions = Color.BLACK;
+        int colorRegions = Color.rgb(0, 0, 0);
         /*
          * First paint for the black  and then paint the numbers to fill with blue
          * */

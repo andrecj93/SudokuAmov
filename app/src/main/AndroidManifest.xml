@@ -23,10 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.CreateProfileActivity">
-
-        </activity>
-        <activity android:name=".activities.RegisterActivity" />
         <activity android:name=".LevelsActivity" />
         <activity android:name=".MenuActivity"></activity>
         <activity android:name=".SingleplayerActivity" />
