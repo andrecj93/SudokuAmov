@@ -10,6 +10,10 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+
 public class GameEngine {
     private static GameEngine instance;
     private GameGrid grid = null;
@@ -18,13 +22,18 @@ public class GameEngine {
     private static final Object mutex = new Object();
     private List<GameCell> gameBoard;
     private GameMode gameMode;
+
     private List<Profile> players;
+    MutableLiveData<Boolean> changedPayer = new MutableLiveData<>();
+
     private Timer timer;
     private int countDown;
+    private int ProfileActive;
+
 
     public GameEngine() {
         gameBoard = new ArrayList<>();
-        countDown = 30;
+        players = new ArrayList<>();
     }
 
 
@@ -33,24 +42,65 @@ public class GameEngine {
             @Override
             public void run() {
                 GameEngine gameEngine = GameEngine.getInstance();
-                gameEngine.setCountDown(gameEngine.getCountDown() - 1);
+                int countDown = gameEngine.getCountDown();
+
+                if (countDown > 0)
+                    gameEngine.setCountDown(countDown - 1);
+                else
+                    gameEngine.changePayerTurn();
+
             }
         };
 
         return timerTask;
     }
 
+
+    public void changePayerTurn() {
+        timer.cancel();
+
+        if (ProfileActive + 1 < players.size())
+            ProfileActive++;
+        else
+            ProfileActive = 0;
+
+        Profile p = players.get(ProfileActive);
+
+        grid.getPlayerView().setName(players.get(ProfileActive).getUsername());
+        setCountDown(30);
+    }
+
+    public void setObserver(LifecycleOwner lifecycleOwner, Observer<Boolean> observer) {
+        changedPayer.observe(lifecycleOwner, observer);
+    }
+
+    public void removeObserver(Observer<Boolean> observer) {
+        changedPayer.removeObserver(observer);
+    }
+
+
     public int getCountDown() {
         return countDown;
     }
 
     public void setCountDown(int countDown) {
+        timer = new Timer();
         this.countDown = countDown;
+
         grid.setTime(countDown);
+        grid.setPlayerName(players.get(ProfileActive).getUsername());
+
         timer.schedule(getTimerTask(), 1 * 1000);
+
+        changedPayer.postValue(true);
     }
 
-    public static void resetGame() {
+    public void resetGame(LifecycleOwner owner) {
+        changedPayer.removeObservers(owner);
+
+        if (timer != null)
+            timer.cancel();
+
         instance = null;
     }
 
@@ -99,29 +149,16 @@ public class GameEngine {
             grid.setSudokuCellsByIntArray();
         }
     }
-/*
-    public void createSudokuGrid(Context context, List<GameCell> gameBoard, GameGrid gameGrid  ) {
-
-        this.gameBoard = gameBoard;
-        grid = gameGrid;
-
-        grid.setSudokuCellsByIntArray();
-    }*/
 
     public void redrawGame(GameGrid gameGrid) {
         grid = gameGrid;
         grid.setSudokuCellsByIntArray();
     }
 
-
     public GameCell getGameCell(int x, int y) {
         int pos = (Configurations.GRID9 * x) + y;
 
         return gameBoard.get(pos);
-    }
-
-    public List<GameCell> getGameBoard() {
-        return gameBoard;
     }
 
     private int[][] getGameBoardArray() {
@@ -180,21 +217,28 @@ public class GameEngine {
         switch (mode) {
             case "networkgame":
                 gameMode = GameMode.MULTIPLAYER_MULTIDEVICE;
-                timer = new Timer();
                 countDown = 30;
+                ProfileActive = 0;
                 timer.schedule(getTimerTask(), 1 * 1000);
                 break;
             case "multiplayer":
                 gameMode = GameMode.MULTIPLAYER_SAMEDEVICE;
-                timer = new Timer();
-                countDown = 30;
-                timer.schedule(getTimerTask(), 1 * 1000);
+
+                players.add(new Profile("Pedro", null, null));
+                players.add(new Profile("André", null, null));
+
+                ProfileActive = 0;
+
+                setCountDown(30);
                 break;
             default:
                 gameMode = GameMode.SINGLEPLAYER;
-                timer = new Timer();
-                countDown = 30;
-                timer.schedule(getTimerTask(), 1 * 1000);
+
+                players.add(new Profile("Pedro", null, null));
+                ProfileActive = 0;
+                grid.setPlayerName(players.get(ProfileActive).getUsername());
+
+                changedPayer.postValue(true);
         }
     }
 

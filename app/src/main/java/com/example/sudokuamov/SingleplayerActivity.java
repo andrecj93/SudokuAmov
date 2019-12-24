@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer;
 public class SingleplayerActivity extends AppCompatActivity {
     //Singleton to run for the entire game
     private GameEngine game;
+    private GameGrid gameGrid;
     String mode, jsonGameObject;
     int difficulty = 0;
 
@@ -35,8 +36,6 @@ public class SingleplayerActivity extends AppCompatActivity {
             //Intent for difficulty passed from the level activity
             difficulty = intent.getIntExtra("Difficulty", 0);
 
-            game.setGameMode(mode);
-
             initBoard(true);
         } else {
 
@@ -45,23 +44,10 @@ public class SingleplayerActivity extends AppCompatActivity {
         }
     }
 
-/*
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString("gameObject", new Gson().toJson(game.getGameBoard()));
-        outState.putString("Mode", this.mode);
-        outState.putInt("Difficulty", this.difficulty);
-
-
-        super.onSaveInstanceState(outState);
-    }
-*/
-
     @Override
     public void onBackPressed() {
+        game.resetGame(this);
         super.onBackPressed();
-        GameEngine.resetGame();
-        finish();
     }
 
     @Override
@@ -83,27 +69,38 @@ public class SingleplayerActivity extends AppCompatActivity {
 
         final PlayerView playerView = new PlayerView(playerNameDisplay, pointsDisplay, timerDisplay);
 
-        GameGrid gameGrid = new GameGrid(this, game, playerView);
+        gameGrid = new GameGrid(this, game, playerView);
 
-
-        gameGrid.setObserver(this, new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean aBoolean) {
-                playerView.RefreshPlayerView();
-            }
-        });
+        setObserver();
 
         if (start) {
             game.setLevels(Levels.fromInteger(difficulty));
 
             game.createSudokuGrid(gameGrid);
+
+            game.setGameMode(mode);
         } else {
             game.redrawGame(gameGrid);
         }
-
-        printSudoku(game.getGrid().getSudokuCellsInteger());
-        game.printSolution();
     }
+
+    private void setObserver() {
+        game.setObserver(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                gameGrid.getPlayerView().RefreshPlayerView();
+            }
+        });
+    }
+
+    /*private void setObserverGrid(){
+        game.setObserver(this, new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                gameGrid.getPlayerView().RefreshPlayerView();
+            }
+        });
+    }*/
 
     private void printSudoku(int[][] sudokuGrid){
         System.out.println("----Sudoku Grid----");

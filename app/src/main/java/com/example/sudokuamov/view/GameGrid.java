@@ -11,17 +11,14 @@ import com.example.sudokuamov.view.sudokuGrid.SudokuCell;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-
 public class GameGrid {
 
     private SudokuCell[][] sudokuCells = new SudokuCell[Configurations.GRID9][Configurations.GRID9];
     private Context context;
     private GameEngine gameEngine = null;
-    PlayerView playerView;
-    MutableLiveData<Boolean> changedPayer = new MutableLiveData<>();
+    private static final Object mutex = new Object();
+    final PlayerView playerView;
+
 
     public GameGrid(Context context, GameEngine gameEngine, PlayerView playerView)
     {
@@ -36,8 +33,10 @@ public class GameGrid {
         }
     }
 
-    public void setObserver(LifecycleOwner lifecycleOwner, Observer<Boolean> observer) {
-        changedPayer.observe(lifecycleOwner, observer);
+    public final PlayerView getPlayerView() {
+        synchronized (mutex) {
+            return playerView;
+        }
     }
 
     public void setSudokuCellsByIntArray() {
@@ -61,7 +60,6 @@ public class GameGrid {
     {
         return sudokuCells[x][y];
     }
-
 
     public void getHelp(int x, int y) {
         for (int i = 1; i < 10; i++)
@@ -155,7 +153,7 @@ public class GameGrid {
     public void setTime(int time) {
         if (this.playerView != null) {
             this.playerView.setTimer(time);
-            changedPayer.postValue(true);
         }
     }
+
 }

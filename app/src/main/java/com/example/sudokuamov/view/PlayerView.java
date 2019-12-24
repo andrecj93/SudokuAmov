@@ -7,6 +7,7 @@ public class PlayerView {
     private TextView usernameView;
     private TextView pointsView;
     private TextView timeView;
+
     private int timer = 30;
     private String name;
     private int points;
@@ -33,9 +34,8 @@ public class PlayerView {
 
 
     public void RefreshPlayerView() {
-        this.usernameView.setText(name);
-        this.pointsView.setText(points + "");
-        this.timeView.setText(timer + "");
+        this.usernameView.setText("Player : " + name);
+        this.pointsView.setText("Points : " + points);
+        this.timeView.setText("Time Left : " + timer + " sec");
     }
-    
 }

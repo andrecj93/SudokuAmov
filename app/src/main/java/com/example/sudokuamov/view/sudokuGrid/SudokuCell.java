@@ -41,8 +41,8 @@ public class SudokuCell extends BaseSudokuCell {
         if (getValue() != 0) {
             canvas.drawText(String.valueOf(getValue()), (getWidth() - bounds.width()) / 2, (getHeight() + bounds.height()) / 2, mPaint);
         }
-
     }
+
 
     private void drawLines(Canvas canvas) {
         int strokePlayerMove = 7;
@@ -104,7 +104,5 @@ public class SudokuCell extends BaseSudokuCell {
 
             canvas.drawRect(0, 0,width, height, mPaint);
         }
-
     }
-
 }
