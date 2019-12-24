@@ -22,4 +22,5 @@
     <string name="str_choose_level">Por favor, escolha o seu nível de dificuldade</string>
     <string name="points">Points</string>
     <string name="save_game">Save Game</string>
+    <string name="online">Online</string>
 </resources>

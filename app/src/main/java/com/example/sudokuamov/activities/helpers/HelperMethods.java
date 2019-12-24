@@ -1,6 +1,8 @@
 package com.example.sudokuamov.activities.helpers;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,12 +12,13 @@ import android.os.Build;
 import android.os.CancellationSignal;
 import android.os.OperationCanceledException;
 import android.util.Size;
+import android.widget.EditText;
+
+import androidx.annotation.RequiresApi;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
-import androidx.annotation.RequiresApi;
 
 public final class HelperMethods {
     private static final int RESIZED_WIDTH = 100;
@@ -92,5 +95,27 @@ public final class HelperMethods {
         return intent;
     }
 
+
+    //Shows a dialog. Returns the value that the user entered
+    public static String showAlertDialog(Context context, String title, String message, String positiveButton, String negativeButton) {
+        final String[] valueFromTxt = {""};
+        final EditText taskEditText = new EditText(context);
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setView(taskEditText)
+                .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        valueFromTxt[0] = String.valueOf(taskEditText.getText());
+
+                    }
+                })
+                .setNegativeButton(negativeButton, null)
+                .create();
+        dialog.show();
+        return valueFromTxt[0];
+
+    }
 
 }

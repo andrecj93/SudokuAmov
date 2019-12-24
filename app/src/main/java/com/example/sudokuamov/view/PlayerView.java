@@ -32,7 +32,6 @@ public class PlayerView {
         this.points = pints;
     }
 
-
     public void RefreshPlayerView() {
         this.usernameView.setText("Player : " + name);
         this.pointsView.setText("Points : " + points);

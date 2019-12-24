@@ -1,20 +1,24 @@
 package com.example.sudokuamov;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sudokuamov.activities.ProfileActivity;
 import com.example.sudokuamov.activities.helpers.HelperMethods;
 
 import java.io.File;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -75,24 +79,65 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+    public static String showAlertDialog(Context context, String title, String message, String positiveButton, String negativeButton) {
+        final String[] valueFromTxt = {""};
+        final EditText taskEditText = new EditText(context);
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(message)
+                .setView(taskEditText)
+                .setPositiveButton(positiveButton, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        valueFromTxt[0] = String.valueOf(taskEditText.getText());
+
+                    }
+                })
+                .setNegativeButton(negativeButton, null)
+                .create();
+        dialog.show();
+        return valueFromTxt[0];
+
+    }
+
     @Override
     public void onClick(View view) {
+        final Intent intent = HelperMethods.makeIntentForUserNameAndPhoto(new String[]{userName, userPhoto, userPhotoThumb},
+                this, LevelsActivity.class);
         switch (view.getId()) {
             case R.id.buttonSinglePlayer: {
-                Intent intent = HelperMethods.makeIntentForUserNameAndPhoto(new String[]{userName, userPhoto, userPhotoThumb},
-                        this, LevelsActivity.class);
-                //new Intent(this, LevelsActivity.class);
                 intent.putExtra("Mode", "singleplayer");
-
                 startActivity(intent);
                 break;
             }
             case R.id.buttonTwoPlayer: {
-                Intent intent = HelperMethods.makeIntentForUserNameAndPhoto(new String[]{userName, userPhoto, userPhotoThumb},
-                        this, LevelsActivity.class);
-                //new Intent(this, LevelsActivity.class);
-                intent.putExtra("Mode", "multiplayer");
+                final EditText taskEditText = new EditText(this);
+                AlertDialog dialog = new AlertDialog.Builder(this)
+                        .setTitle("1v1 Your Friend")
+                        .setMessage("Your friend's name")
+                        .setView(taskEditText)
+                        .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String value = String.valueOf(taskEditText.getText());
+                                intent.putExtra("myFriendsName", value);
+                                intent.putExtra("Mode", "multiplayer");
+                                startActivity(intent);
 
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .create();
+                dialog.show();
+
+                break;
+            }
+            case R.id.buttonNetworkGame: {
+                intent.putExtra("Mode", "networkgame");
+
+                //TODO
+                //Maybe change this after and make a new intent for a different for a list of active active servers with the option to create a new server.
                 startActivity(intent);
                 break;
             }

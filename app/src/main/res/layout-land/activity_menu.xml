@@ -29,10 +29,23 @@
         android:text="@string/two_players"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/textSizeButtonMain"
-        app:layout_constraintBottom_toTopOf="@+id/guideline4"
+        app:layout_constraintBottom_toTopOf="@id/buttonNetworkGame"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/buttonSinglePlayer" />
+
+    <Button
+        android:id="@+id/buttonNetworkGame"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        android:background="@drawable/other_button_style"
+        android:text="@string/online"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/textSizeButtonMain"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintBottom_toTopOf="@id/guideline4"
+        app:layout_constraintTop_toBottomOf="@+id/buttonTwoPlayer" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"

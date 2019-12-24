@@ -10,17 +10,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.sudokuamov.activities.ProfileActivity;
 import com.example.sudokuamov.activities.helpers.HelperMethods;
 import com.example.sudokuamov.game.helpers.Levels;
 
 import java.io.File;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 public class LevelsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    String mode = "";
+    String mode = "", friendName = "";
     String userName, userPhoto, userPhotoThumb;
 
     @Override
@@ -30,6 +30,9 @@ public class LevelsActivity extends AppCompatActivity implements View.OnClickLis
 
         Intent intent = getIntent();
         mode = intent.getStringExtra("Mode");
+        if (mode.equals("multiplayer")) {
+            friendName = intent.getStringExtra("myFriendsName");
+        }
 
         setButtonActions();
 
@@ -98,7 +101,7 @@ public class LevelsActivity extends AppCompatActivity implements View.OnClickLis
                 this, SingleplayerActivity.class);
 
         intent.putExtra("Mode", mode);
-
+        intent.putExtra("myFriendsName", friendName);
         switch (view.getId()) {
             case R.id.VeryEasyButton: {
                 intent.putExtra("Difficulty", Levels.intToEnum(Levels.VERYEASY));

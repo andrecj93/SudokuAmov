@@ -1,5 +1,9 @@
 package com.example.sudokuamov.game;
 
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+
 import com.example.sudokuamov.game.helpers.Configurations;
 import com.example.sudokuamov.game.helpers.GameMode;
 import com.example.sudokuamov.game.helpers.Levels;
@@ -9,10 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 public class GameEngine {
     private static GameEngine instance;
@@ -78,6 +78,9 @@ public class GameEngine {
         changedPayer.removeObserver(observer);
     }
 
+    public void addPlayerToList(Profile profile) {
+        this.players.add(profile);
+    }
 
     public int getCountDown() {
         return countDown;
@@ -213,6 +216,7 @@ public class GameEngine {
         return gameMode;
     }
 
+
     public void setGameMode(String mode) {
         switch (mode) {
             case "networkgame":
@@ -224,6 +228,7 @@ public class GameEngine {
             case "multiplayer":
                 gameMode = GameMode.MULTIPLAYER_SAMEDEVICE;
 
+
                 players.add(new Profile("Pedro", null, null));
                 players.add(new Profile("André", null, null));
 
@@ -234,7 +239,7 @@ public class GameEngine {
             default:
                 gameMode = GameMode.SINGLEPLAYER;
 
-                players.add(new Profile("Pedro", null, null));
+                //players.add(new Profile("Pedro", null, null));
                 ProfileActive = 0;
                 grid.setPlayerName(players.get(ProfileActive).getUsername());
 
