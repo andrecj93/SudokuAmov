@@ -155,7 +155,7 @@ public class GameEngine {
 
     public void redrawGame(GameGrid gameGrid) {
         grid = gameGrid;
-        grid.setSudokuCellsByIntArray();//TODO CHANGE THIS TO OBVERVERTRIGGER
+        //grid.setSudokuCellsByIntArray();//TODO CHANGE THIS TO OBVERVERTRIGGER
 
         changedGrid.postValue(true);
     }
