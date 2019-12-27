@@ -99,8 +99,6 @@ public class GameGrid {
             gameEngine.getGameCell(x, y).setValue(number);
             gameEngine.setActivePlayerPoints();
         } else {
-
-
             sudokuCells[x][y].setRed();
 
             TimerTask task = new TimerTask() {

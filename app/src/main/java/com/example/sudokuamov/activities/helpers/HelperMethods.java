@@ -14,8 +14,6 @@ import android.os.OperationCanceledException;
 import android.util.Size;
 import android.widget.EditText;
 
-import androidx.annotation.RequiresApi;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,14 +22,12 @@ public final class HelperMethods {
     private static final int RESIZED_WIDTH = 100;
     private static final int RESIZED_HEIGHT = 100;
 
-    @RequiresApi(api = Build.VERSION_CODES.Q)
     public static void ResizeImages(String sPath, String sTo) throws IOException {
 
         Bitmap photo = null;
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 CancellationSignal signal = new CancellationSignal();
-                /** @hide */
                 photo = ThumbnailUtils.createImageThumbnail(
                         new File(sPath),
                         new Size(RESIZED_WIDTH, RESIZED_HEIGHT),

@@ -1,5 +1,9 @@
 package com.example.sudokuamov.game;
 
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+
 import com.example.sudokuamov.game.helpers.Configurations;
 import com.example.sudokuamov.game.helpers.GameMode;
 import com.example.sudokuamov.game.helpers.Levels;
@@ -9,10 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 public class GameEngine {
     private static GameEngine instance;
@@ -80,8 +80,6 @@ public class GameEngine {
         return result;
     }
 
-
-
     public void addPlayerToList(Profile profile) {
         this.players.add(profile);
     }
@@ -143,21 +141,17 @@ public class GameEngine {
 
             grid = gameGrid;
 
-            //grid.setSudokuCellsByIntArray();//TODO CHANGE THIS TO OBVERVERTRIGGER
 
             changedGrid.postValue(true);
         }
     }
 
     public void redrawGame(GameGrid gameGrid) {
-        // grid = gameGrid;
-        //grid.setSudokuCellsByIntArray();//TODO CHANGE THIS TO OBVERVERTRIGGER
-
         changedGrid.postValue(true);
     }
 
     public GameCell getGameCell(int x, int y) {
-        int pos = (Configurations.GRID9 * x) + y;
+        int pos = (Configurations.GRID9 * y) + x;
 
         return gameBoard.get(pos);
     }
@@ -225,19 +219,11 @@ public class GameEngine {
                 break;
             case "multiplayer":
                 gameMode = GameMode.MULTIPLAYER_SAMEDEVICE;
-
-
-                //players.add(new Profile("Pedro", null, null));
-                //players.add(new Profile("André", null, null));
-
                 ProfileActive = 0;
-
                 setCountDown(30);
                 break;
             default:
                 gameMode = GameMode.SINGLEPLAYER;
-
-                //players.add(new Profile("Pedro", null, null));
                 ProfileActive = 0;
 
                 changedPayer.postValue(true);
@@ -249,7 +235,7 @@ public class GameEngine {
         System.out.println("---Sudoku Solution---");
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
-                arr[i][j] = getGameCell(j, i).getSolution();
+                arr[i][j] = getGameCell(i, j).getSolution();
                 System.out.print(arr[i][j] + "|");
             }
             System.out.println();
@@ -295,6 +281,10 @@ public class GameEngine {
 
     public void removeObserverGrid(Observer<Boolean> observer) {
         changedGrid.removeObserver(observer);
+    }
+
+    public List<Profile> getPlayersList() {
+        return players;
     }
 
 }

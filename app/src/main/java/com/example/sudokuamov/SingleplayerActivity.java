@@ -4,20 +4,23 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 import com.example.sudokuamov.game.GameEngine;
 import com.example.sudokuamov.game.Profile;
 import com.example.sudokuamov.game.helpers.Configurations;
+import com.example.sudokuamov.game.helpers.GameMode;
 import com.example.sudokuamov.game.helpers.Levels;
 import com.example.sudokuamov.view.GameGrid;
 import com.example.sudokuamov.view.PlayerView;
 
 import java.io.File;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 
 public class SingleplayerActivity extends AppCompatActivity {
     //Singleton to run for the entire game
@@ -36,7 +39,6 @@ public class SingleplayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_singleplayer);
 
         game = GameEngine.getInstance();
-        setUserPhotoAndName();
 
         //activity is being created for the first time
         if (savedInstanceState == null) {
@@ -45,13 +47,18 @@ public class SingleplayerActivity extends AppCompatActivity {
             mode = intent.getStringExtra("Mode");//TODO CHANGE THIS TO ENUM
             //Intent for difficulty passed from the level activity
             difficulty = intent.getIntExtra("Difficulty", 0);
-
+            setUserPhotoAndName();
             initBoard(true);
+
         } else {
+            userName = game.getActivePalyer().getUsername();
+            userPhoto = game.getActivePalyer().getUserPhotoPath();
+            userPhotoThumb = game.getActivePalyer().getUserPhotoThumbnailPath();
 
             initBoard(false);
-
         }
+
+        disableViews();
     }
 
     @Override
@@ -69,6 +76,20 @@ public class SingleplayerActivity extends AppCompatActivity {
         //initBoard(false);
     }*/
 
+    private void disableViews() {
+        if (game.getGameMode().equals(GameMode.SINGLEPLAYER))
+            findViewById(R.id.time).setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putString("nickName", userName);
+        outState.putString("userPhotoPath", userPhoto);
+        outState.putString("userPhotoThumbPath", userPhotoThumb);
+
+        super.onSaveInstanceState(outState);
+    }
+
     private void initBoard(boolean start) {
         TextView playerNameDisplay = findViewById(R.id.username);
         TextView timerDisplay = findViewById(R.id.time);
@@ -77,18 +98,16 @@ public class SingleplayerActivity extends AppCompatActivity {
         final PlayerView playerView = new PlayerView(playerNameDisplay, pointsDisplay, timerDisplay);
 
         gameGrid = new GameGrid(this, game, playerView);
-        setupPlayers();
-        
+
 
         if (start) {
             game.setLevels(Levels.fromInteger(difficulty));
             game.createSudokuGrid(gameGrid);
-
             game.setGameMode(mode);
+            setupPlayers();
 
             setObserver();
             setObserverGrid();
-
         } else {
             game.redrawGame(gameGrid);
         }
@@ -157,7 +176,6 @@ public class SingleplayerActivity extends AppCompatActivity {
         } else {
             imgUser.setImageResource(R.drawable.userphoto);
         }
-
     }
 
     private void printSudoku(int[][] sudokuGrid){
