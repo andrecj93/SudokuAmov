@@ -18,12 +18,16 @@ public class GameEngine {
     private static GameEngine instance;
     private GameGrid grid = null;
     private Levels levels;
+
     private int selectedPosX = -1, selectedPosY = -1;
+
     private static final Object mutex = new Object();
+
     private List<GameCell> gameBoard;
     private GameMode gameMode;
 
     private List<Profile> players;
+
     MutableLiveData<Boolean> changedPayer = new MutableLiveData<>();
     MutableLiveData<Boolean> changedGrid = new MutableLiveData<>();
 
@@ -150,8 +154,8 @@ public class GameEngine {
     }
 
     public void redrawGame(GameGrid gameGrid) {
-        // grid = gameGrid;
-        //grid.setSudokuCellsByIntArray();//TODO CHANGE THIS TO OBVERVERTRIGGER
+        grid = gameGrid;
+        grid.setSudokuCellsByIntArray();//TODO CHANGE THIS TO OBVERVERTRIGGER
 
         changedGrid.postValue(true);
     }
@@ -210,8 +214,8 @@ public class GameEngine {
 
     }
 
-    public GameMode getGameMode() {
-        return gameMode;
+    public String getGameMode() {
+        return GameMode.myToString(gameMode);
     }
 
 
@@ -225,10 +229,6 @@ public class GameEngine {
                 break;
             case "multiplayer":
                 gameMode = GameMode.MULTIPLAYER_SAMEDEVICE;
-
-
-                //players.add(new Profile("Pedro", null, null));
-                //players.add(new Profile("André", null, null));
 
                 ProfileActive = 0;
 
@@ -284,8 +284,8 @@ public class GameEngine {
         changedPayer.observe(lifecycleOwner, observer);
     }
 
-    public void removeObserver(Observer<Boolean> observer) {
-        changedPayer.removeObserver(observer);
+    public void removeObserver(LifecycleOwner lifecycleOwner) {
+        changedPayer.removeObservers(lifecycleOwner);
     }
 
 
@@ -293,8 +293,8 @@ public class GameEngine {
         changedGrid.observe(lifecycleOwner, observer);
     }
 
-    public void removeObserverGrid(Observer<Boolean> observer) {
-        changedGrid.removeObserver(observer);
+    public void removeObserverGrid(LifecycleOwner lifecycleOwner) {
+        changedGrid.removeObservers(lifecycleOwner);
     }
 
 }

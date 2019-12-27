@@ -11,18 +11,12 @@ public class PlayerView {
     private TextView pointsView;
     private TextView timeView;
 
-    private int points;
-
-
     public PlayerView(TextView username, TextView points, TextView time) {
         this.usernameView = username;
         this.pointsView = points;
         this.timeView = time;
     }
 
-    public void setPoints(int pints) {
-        this.points = pints;
-    }
 
     public void RefreshPlayerView() {
         GameEngine gameEngine = GameEngine.getInstance();

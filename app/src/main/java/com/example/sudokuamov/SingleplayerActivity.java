@@ -36,10 +36,13 @@ public class SingleplayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_singleplayer);
 
         game = GameEngine.getInstance();
-        setUserPhotoAndName();
+
 
         //activity is being created for the first time
         if (savedInstanceState == null) {
+
+            setUserPhotoAndName();
+
             Intent intent = getIntent();
             //Single player or two players from menu activity
             mode = intent.getStringExtra("Mode");//TODO CHANGE THIS TO ENUM
@@ -77,10 +80,11 @@ public class SingleplayerActivity extends AppCompatActivity {
         final PlayerView playerView = new PlayerView(playerNameDisplay, pointsDisplay, timerDisplay);
 
         gameGrid = new GameGrid(this, game, playerView);
-        setupPlayers();
-        
+
 
         if (start) {
+
+            setupPlayers();
             game.setLevels(Levels.fromInteger(difficulty));
             game.createSudokuGrid(gameGrid);
 
@@ -90,10 +94,22 @@ public class SingleplayerActivity extends AppCompatActivity {
             setObserverGrid();
 
         } else {
+            mode = game.getGameMode();
+            setObserver();
+            setObserverGrid();
+
             game.redrawGame(gameGrid);
         }
 
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        game.removeObserver(this);
+        game.removeObserverGrid(this);
     }
 
     private void setObserver() {
@@ -117,6 +133,7 @@ public class SingleplayerActivity extends AppCompatActivity {
 
     private void setupPlayers() {
         game.addPlayerToList(new Profile(userName, userPhoto, userPhotoThumb));
+
         if (mode.equals("multiplayer")) {
             //here we are also getting the new user for that came from the intent
             String userFriend = getIntent().getStringExtra("myFriendsName") == null ?

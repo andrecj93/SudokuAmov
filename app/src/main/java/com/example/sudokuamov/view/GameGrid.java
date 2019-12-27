@@ -40,16 +40,17 @@ public class GameGrid {
     }
 
     public void setSudokuCellsByIntArray() {
+        synchronized (mutex) {
+            GameEngine g = GameEngine.getInstance();
+            for (int x = 0; x < Configurations.GRID9; x++) {
+                for (int y = 0; y < Configurations.GRID9; y++) {
+                    GameCell gameCell = g.getGameCell(x, y);
 
-        GameEngine g = GameEngine.getInstance();
-        for (int x = 0; x < Configurations.GRID9; x++) {
-            for (int y = 0; y < Configurations.GRID9; y++) {
-                GameCell gameCell = g.getGameCell(x, y);
+                    sudokuCells[x][y].setInitValue(gameCell.getValue());
 
-                sudokuCells[x][y].setInitValue(gameCell.getValue());
-
-                if (!gameCell.isChangeable())
-                    sudokuCells[x][y].setNotModifiable();
+                    if (!gameCell.isChangeable())
+                        sudokuCells[x][y].setNotModifiable();
+                }
             }
         }
     }
@@ -99,7 +100,6 @@ public class GameGrid {
             gameEngine.getGameCell(x, y).setValue(number);
             gameEngine.setActivePlayerPoints();
         } else {
-
 
             sudokuCells[x][y].setRed();
 
