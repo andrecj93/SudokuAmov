@@ -13,12 +13,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.sudokuamov.activities.ProfileActivity;
 import com.example.sudokuamov.activities.helpers.HelperMethods;
 
 import java.io.File;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -124,7 +124,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                                 intent.putExtra("Mode", "multiplayer");
                                 startActivity(intent);
 
-                                finish();
+                                //finish(); corre mal quando fazes back
                             }
                         })
                         .setNegativeButton("Cancel", null)

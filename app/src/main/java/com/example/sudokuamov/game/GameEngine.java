@@ -1,9 +1,5 @@
 package com.example.sudokuamov.game;
 
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-
 import com.example.sudokuamov.game.helpers.Configurations;
 import com.example.sudokuamov.game.helpers.GameMode;
 import com.example.sudokuamov.game.helpers.Levels;
@@ -13,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 public class GameEngine {
     private static GameEngine instance;
@@ -25,6 +25,7 @@ public class GameEngine {
 
     private List<Profile> players;
     MutableLiveData<Boolean> changedPayer = new MutableLiveData<>();
+    MutableLiveData<Boolean> changedGrid = new MutableLiveData<>();
 
     private Timer timer;
     private int countDown;
@@ -57,26 +58,29 @@ public class GameEngine {
 
 
     public void changePayerTurn() {
-        timer.cancel();
-
         if (ProfileActive + 1 < players.size())
             ProfileActive++;
         else
             ProfileActive = 0;
 
-        Profile p = players.get(ProfileActive);
-
-        grid.getPlayerView().setName(players.get(ProfileActive).getUsername());
         setCountDown(30);
     }
 
-    public void setObserver(LifecycleOwner lifecycleOwner, Observer<Boolean> observer) {
-        changedPayer.observe(lifecycleOwner, observer);
+    public static GameEngine getInstance() {
+        GameEngine result = instance;
+
+        if (result == null) {
+            synchronized (mutex) {
+                result = instance;
+                if (result == null)
+                    instance = result = new GameEngine();
+            }
+        }
+
+        return result;
     }
 
-    public void removeObserver(Observer<Boolean> observer) {
-        changedPayer.removeObserver(observer);
-    }
+
 
     public void addPlayerToList(Profile profile) {
         this.players.add(profile);
@@ -86,16 +90,8 @@ public class GameEngine {
         return countDown;
     }
 
-    public void setCountDown(int countDown) {
-        timer = new Timer();
-        this.countDown = countDown;
-
-        grid.setTime(countDown);
-        grid.setPlayerName(players.get(ProfileActive).getUsername());
-
-        timer.schedule(getTimerTask(), 1 * 1000);
-
-        changedPayer.postValue(true);
+    public Profile getActivePalyer() {
+        return players.get(ProfileActive);
     }
 
     public void resetGame(LifecycleOwner owner) {
@@ -112,18 +108,16 @@ public class GameEngine {
       field is only accessed once (due to “return result;” instead of “return instance;”).
       This can improve the method’s overall performance by as much as 25 percent.*/
 
-    public static GameEngine getInstance() {
-        GameEngine result = instance;
-        if (result == null) {
-            synchronized (mutex) {
-                result = instance;
-                if (result == null)
-                    instance = result = new GameEngine();
-            }
-        }
-        return result;
-    }
+    public void setCountDown(int countDown) {
+        if (timer != null)
+            timer.cancel();
+        timer = new Timer();
+        this.countDown = countDown;
 
+        timer.schedule(getTimerTask(), 1 * 1000);
+
+        changedPayer.postValue(true);
+    }
 
     public void createSudokuGrid(GameGrid gameGrid) {
         synchronized (mutex) {
@@ -149,13 +143,17 @@ public class GameEngine {
 
             grid = gameGrid;
 
-            grid.setSudokuCellsByIntArray();
+            //grid.setSudokuCellsByIntArray();//TODO CHANGE THIS TO OBVERVERTRIGGER
+
+            changedGrid.postValue(true);
         }
     }
 
     public void redrawGame(GameGrid gameGrid) {
-        grid = gameGrid;
-        grid.setSudokuCellsByIntArray();
+        // grid = gameGrid;
+        //grid.setSudokuCellsByIntArray();//TODO CHANGE THIS TO OBVERVERTRIGGER
+
+        changedGrid.postValue(true);
     }
 
     public GameCell getGameCell(int x, int y) {
@@ -229,8 +227,8 @@ public class GameEngine {
                 gameMode = GameMode.MULTIPLAYER_SAMEDEVICE;
 
 
-                players.add(new Profile("Pedro", null, null));
-                players.add(new Profile("André", null, null));
+                //players.add(new Profile("Pedro", null, null));
+                //players.add(new Profile("André", null, null));
 
                 ProfileActive = 0;
 
@@ -241,7 +239,6 @@ public class GameEngine {
 
                 //players.add(new Profile("Pedro", null, null));
                 ProfileActive = 0;
-                grid.setPlayerName(players.get(ProfileActive).getUsername());
 
                 changedPayer.postValue(true);
         }
@@ -275,4 +272,29 @@ public class GameEngine {
         int length = getGameBoardArray().length;
         return SudokuSolver.solveSudoku(getGameBoardArray(), length);
     }
+
+    public void setActivePlayerPoints() {
+        getActivePalyer().setPoints(0);
+
+        if (gameMode != GameMode.SINGLEPLAYER)
+            setCountDown(20);
+    }
+
+    public void setObserver(LifecycleOwner lifecycleOwner, Observer<Boolean> observer) {
+        changedPayer.observe(lifecycleOwner, observer);
+    }
+
+    public void removeObserver(Observer<Boolean> observer) {
+        changedPayer.removeObserver(observer);
+    }
+
+
+    public void setObserverGrid(LifecycleOwner lifecycleOwner, Observer<Boolean> observer) {
+        changedGrid.observe(lifecycleOwner, observer);
+    }
+
+    public void removeObserverGrid(Observer<Boolean> observer) {
+        changedGrid.removeObserver(observer);
+    }
+
 }

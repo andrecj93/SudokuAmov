@@ -7,9 +7,6 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-
 import com.example.sudokuamov.game.GameEngine;
 import com.example.sudokuamov.game.Profile;
 import com.example.sudokuamov.game.helpers.Configurations;
@@ -19,6 +16,9 @@ import com.example.sudokuamov.view.PlayerView;
 
 import java.io.File;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+
 public class SingleplayerActivity extends AppCompatActivity {
     //Singleton to run for the entire game
     private GameEngine game;
@@ -27,7 +27,7 @@ public class SingleplayerActivity extends AppCompatActivity {
     //The user data from the intent
     private String userName, userPhoto, userPhotoThumb;
 
-    String mode, jsonGameObject;
+    String mode;
     int difficulty = 0;
 
     @Override
@@ -59,17 +59,15 @@ public class SingleplayerActivity extends AppCompatActivity {
         game.resetGame(this);
         super.onBackPressed();
     }
-
+/*
     @Override
     protected void onResume() {
         super.onResume();
 
-        game = GameEngine.getInstance();
+        //game = GameEngine.getInstance();
 
-        initBoard(false);
-    }
-
-
+        //initBoard(false);
+    }*/
 
     private void initBoard(boolean start) {
         TextView playerNameDisplay = findViewById(R.id.username);
@@ -86,13 +84,15 @@ public class SingleplayerActivity extends AppCompatActivity {
             game.setLevels(Levels.fromInteger(difficulty));
             game.createSudokuGrid(gameGrid);
 
-
             game.setGameMode(mode);
+
+            setObserver();
+            setObserverGrid();
+
         } else {
             game.redrawGame(gameGrid);
         }
 
-        setObserver();
 
     }
 
@@ -105,14 +105,14 @@ public class SingleplayerActivity extends AppCompatActivity {
         });
     }
 
-    /*private void setObserverGrid(){
-        game.setObserver(this, new Observer<Boolean>() {
+    private void setObserverGrid() {
+        game.setObserverGrid(this, new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {
-                gameGrid.getPlayerView().RefreshPlayerView();
+                gameGrid.setSudokuCellsByIntArray();
             }
         });
-    }*/
+    }
 
 
     private void setupPlayers() {
@@ -124,6 +124,7 @@ public class SingleplayerActivity extends AppCompatActivity {
                     getIntent().getStringExtra("myFriendsName");
 
             assert userFriend != null;
+
             if (!userFriend.isEmpty())
                 game.addPlayerToList(new Profile(userFriend, null, null));
             else
@@ -142,7 +143,6 @@ public class SingleplayerActivity extends AppCompatActivity {
 
         if (userName.equals(""))
             userName = "user1";
-
 
         String helloPhrase = String.format("%s", userName);
         txtUser.setText(helloPhrase);

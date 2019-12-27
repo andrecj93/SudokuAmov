@@ -5,6 +5,7 @@ public class Profile {
     private String username;
     private String userPhotoPath;
     private String userPhotoThumbnailPath;
+    private int points;
 
     public Profile(String username, String userPhotoPath, String userPhotoThumbnailPath) {
         this.username = username;
@@ -38,5 +39,16 @@ public class Profile {
 
     public void setUserPhotoThumbnailPath(String userPhotoThumbnailPath) {
         this.userPhotoThumbnailPath = userPhotoThumbnailPath;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        if (points == 0)
+            this.points++;
+        else
+            this.points = points;
     }
 }

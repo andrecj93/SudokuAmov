@@ -40,9 +40,11 @@ public class GameGrid {
     }
 
     public void setSudokuCellsByIntArray() {
+
+        GameEngine g = GameEngine.getInstance();
         for (int x = 0; x < Configurations.GRID9; x++) {
             for (int y = 0; y < Configurations.GRID9; y++) {
-                GameCell gameCell = gameEngine.getGameCell(x, y);
+                GameCell gameCell = g.getGameCell(x, y);
 
                 sudokuCells[x][y].setInitValue(gameCell.getValue());
 
@@ -86,9 +88,19 @@ public class GameGrid {
         }
 
         sudokuCells[x][y].setValue(number);
-        if (gameEngine.checkNewNumberFill(x, y, number))
+
+        if (number == 0) {
+            gameEngine.getGameCell(x, y).setValue(0);
+            return;
+        }
+
+
+        if (gameEngine.checkNewNumberFill(x, y, number)) {
             gameEngine.getGameCell(x, y).setValue(number);
-        else {
+            gameEngine.setActivePlayerPoints();
+        } else {
+
+
             sudokuCells[x][y].setRed();
 
             TimerTask task = new TimerTask() {
@@ -135,25 +147,6 @@ public class GameGrid {
                 Toast.makeText(context, "Well Done! That is the correct solution.", Toast.LENGTH_LONG).show();
             else
                 Toast.makeText(context, "Try again! That is not a correct solution.", Toast.LENGTH_LONG).show();
-        }
-    }
-
-
-    public void setPoints(int points) {
-        if (this.playerView != null)
-            this.playerView.setPoints(points);
-    }
-
-
-    public void setPlayerName(String name) {
-        if (this.playerView != null)
-            this.playerView.setName(name);
-    }
-
-
-    public void setTime(int time) {
-        if (this.playerView != null) {
-            this.playerView.setTimer(time);
         }
     }
 
