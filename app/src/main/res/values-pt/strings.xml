@@ -20,7 +20,8 @@
     <string name="veryHard">Muito Difícil</string>
     <string name="newbie">Principiante</string>
     <string name="str_choose_level">Por favor, escolha o seu nível de dificuldade</string>
-    <string name="points">Points</string>
-    <string name="save_game">Save Game</string>
+    <string name="points">Pontos</string>
+    <string name="save_game">Guardar jogo</string>
     <string name="online">Online</string>
+    <string name="the_winner_is">O vencedor é:</string>
 </resources>

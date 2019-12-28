@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sudokuamov.activities.ProfileActivity;
 import com.example.sudokuamov.activities.helpers.HelperMethods;
+import com.example.sudokuamov.game.helpers.GameMode;
 import com.example.sudokuamov.game.helpers.Levels;
 
 import java.io.File;
@@ -30,7 +31,7 @@ public class LevelsActivity extends AppCompatActivity implements View.OnClickLis
 
         Intent intent = getIntent();
         mode = intent.getStringExtra("Mode");
-        if (mode.equals("multiplayer")) {
+        if (mode != null && mode.equals(GameMode.MULTIPLAYER_SAMEDEVICE.toString())) {
             friendName = intent.getStringExtra("myFriendsName");
         }
 

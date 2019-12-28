@@ -292,10 +292,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             //Capture image with custom size
             int width = 100;
             int height = 100;
-            /*if (jpegSizes != null && jpegSizes.length > 0) {
+            if (jpegSizes != null && jpegSizes.length > 0) {
                 width = jpegSizes[0].getWidth();
                 height = jpegSizes[0].getHeight();
-            }*/
+            }
             final ImageReader reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1);
             List<Surface> outputSurface = new ArrayList<>(2);
             outputSurface.add(reader.getSurface());
@@ -450,7 +450,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
             assert manager != null;
-            if (manager.getCameraIdList()[1] != "") {
+            if (!manager.getCameraIdList()[1].equals("")) {
                 cameraId = manager.getCameraIdList()[1];
             } else
                 cameraId = manager.getCameraIdList()[0];

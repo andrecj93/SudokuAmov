@@ -1,10 +1,15 @@
 package com.example.sudokuamov.view;
 
 import android.content.Context;
+import android.content.Intent;
+import android.view.View;
 import android.widget.Toast;
 
+import com.example.sudokuamov.AfterGameActivity;
+import com.example.sudokuamov.activities.helpers.HelperMethods;
 import com.example.sudokuamov.game.GameCell;
 import com.example.sudokuamov.game.GameEngine;
+import com.example.sudokuamov.game.Profile;
 import com.example.sudokuamov.game.helpers.Configurations;
 import com.example.sudokuamov.view.sudokuGrid.SudokuCell;
 
@@ -18,13 +23,15 @@ public class GameGrid {
     private GameEngine gameEngine = null;
     private static final Object mutex = new Object();
     final PlayerView playerView;
+    private final View sudokuGridView;
 
 
-    public GameGrid(Context context, GameEngine gameEngine, PlayerView playerView)
+    public GameGrid(Context context, GameEngine gameEngine, PlayerView playerView, View view)
     {
         this.context = context;
         this.gameEngine = gameEngine;
         this.playerView = playerView;
+        this.sudokuGridView = view;
 
         for (int x = 0; x < Configurations.GRID9; x++) {
             for (int y = 0; y < Configurations.GRID9; y++) {
@@ -40,16 +47,17 @@ public class GameGrid {
     }
 
     public void setSudokuCellsByIntArray() {
+        synchronized (mutex) {
+            GameEngine g = GameEngine.getInstance();
+            for (int x = 0; x < Configurations.GRID9; x++) {
+                for (int y = 0; y < Configurations.GRID9; y++) {
+                    GameCell gameCell = g.getGameCell(x, y);
 
-        GameEngine g = GameEngine.getInstance();
-        for (int x = 0; x < Configurations.GRID9; x++) {
-            for (int y = 0; y < Configurations.GRID9; y++) {
-                GameCell gameCell = g.getGameCell(x, y);
+                    sudokuCells[x][y].setInitValue(gameCell.getValue());
 
-                sudokuCells[x][y].setInitValue(gameCell.getValue());
-
-                if (!gameCell.isChangeable())
-                    sudokuCells[x][y].setNotModifiable();
+                    if (!gameCell.isChangeable())
+                        sudokuCells[x][y].setNotModifiable();
+                }
             }
         }
     }
@@ -69,6 +77,13 @@ public class GameGrid {
                 Toast.makeText(context, "Um Numero possivel é [" + i + "]", Toast.LENGTH_LONG).show();
                 break;
             }
+    }
+
+    public void makeAnimation() {
+        /*ObjectAnimator animation = ObjectAnimator.ofFloat(sudokuGridView, "translationX", 100f);
+        animation.setDuration(50);
+        animation.start();*/
+        sudokuGridView.animate().rotationBy(360);
     }
 
     public SudokuCell getItem(int position)
@@ -99,6 +114,7 @@ public class GameGrid {
             gameEngine.getGameCell(x, y).setValue(number);
             gameEngine.setActivePlayerPoints();
         } else {
+
             sudokuCells[x][y].setRed();
 
             TimerTask task = new TimerTask() {
@@ -129,7 +145,7 @@ public class GameGrid {
     public boolean isAllCellsFilled(){
         for (int x = 0; x < Configurations.GRID9; x++) {
             for (int y = 0; y < Configurations.GRID9; y++) {
-                if (sudokuCells[x][y].getValue() == 0)
+                if (sudokuCells[x][y].getValue() <= 0)
                     return false;
             }
         }
@@ -141,8 +157,21 @@ public class GameGrid {
 
         //If game is not successful and all numbers are filled
         if (isAllCellsFilled()) {
-            if (gameEngine.getEndOffGame())
+            Profile checkWinner = gameEngine.getEndOffGame();
+            if (checkWinner != null) {
+                Intent intent = new Intent(HelperMethods.makeIntentForUserNameAndPhoto(
+                        new String[]{
+                                checkWinner.getUsername(),
+                                checkWinner.getUserPhotoPath(),
+                                checkWinner.getUserPhotoThumbnailPath()
+                        }, context, AfterGameActivity.class));
+                intent.putExtra("winnerPoints", checkWinner.getPoints());
+
+                //startActivity(intent);
+                //finish();
+                //TODO - FINISH THIS, NEED TO PUT THIS ON THE SINGLE PLAYER ACTIVITY
                 Toast.makeText(context, "Well Done! That is the correct solution.", Toast.LENGTH_LONG).show();
+            }
             else
                 Toast.makeText(context, "Try again! That is not a correct solution.", Toast.LENGTH_LONG).show();
         }

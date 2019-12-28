@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.sudokuamov.activities.ProfileActivity;
 import com.example.sudokuamov.activities.helpers.HelperMethods;
+import com.example.sudokuamov.game.helpers.GameMode;
 
 import java.io.File;
 
@@ -106,7 +107,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 this, LevelsActivity.class);
         switch (view.getId()) {
             case R.id.buttonSinglePlayer: {
-                intent.putExtra("Mode", "singleplayer");
+                intent.putExtra("Mode", GameMode.SINGLEPLAYER.toString());
                 startActivity(intent);
                 break;
             }
@@ -121,7 +122,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                             public void onClick(DialogInterface dialog, int which) {
                                 String value = String.valueOf(taskEditText.getText());
                                 intent.putExtra("myFriendsName", value);
-                                intent.putExtra("Mode", "multiplayer");
+                                intent.putExtra("Mode", GameMode.MULTIPLAYER_SAMEDEVICE.toString());
                                 startActivity(intent);
 
                                 //finish(); corre mal quando fazes back
@@ -134,7 +135,7 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.buttonNetworkGame: {
-                intent.putExtra("Mode", "networkgame");
+                intent.putExtra("Mode", GameMode.MULTIPLAYER_MULTIDEVICE.toString());
 
                 //TODO
 

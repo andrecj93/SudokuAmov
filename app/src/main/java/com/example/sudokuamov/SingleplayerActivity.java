@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
@@ -26,6 +25,7 @@ public class SingleplayerActivity extends AppCompatActivity {
     //Singleton to run for the entire game
     private GameEngine game;
     private GameGrid gameGrid;
+    private ImageView imgUser;
 
     //The user data from the intent
     private String userName, userPhoto, userPhotoThumb;
@@ -39,22 +39,18 @@ public class SingleplayerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_singleplayer);
 
         game = GameEngine.getInstance();
+        imgUser = findViewById(R.id.imageView);
 
         //activity is being created for the first time
         if (savedInstanceState == null) {
+            setUserPhotoAndName();
             Intent intent = getIntent();
             //Single player or two players from menu activity
-            mode = intent.getStringExtra("Mode");//TODO CHANGE THIS TO ENUM
+            mode = intent.getStringExtra("Mode");
             //Intent for difficulty passed from the level activity
             difficulty = intent.getIntExtra("Difficulty", 0);
-            setUserPhotoAndName();
             initBoard(true);
-
         } else {
-            userName = game.getActivePalyer().getUsername();
-            userPhoto = game.getActivePalyer().getUserPhotoPath();
-            userPhotoThumb = game.getActivePalyer().getUserPhotoThumbnailPath();
-
             initBoard(false);
         }
 
@@ -76,43 +72,56 @@ public class SingleplayerActivity extends AppCompatActivity {
         //initBoard(false);
     }*/
 
+
     private void disableViews() {
+        //Disabling the label time view in singleplayer mode
         if (game.getGameMode().equals(GameMode.SINGLEPLAYER))
             findViewById(R.id.time).setVisibility(View.GONE);
-    }
-
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putString("nickName", userName);
-        outState.putString("userPhotoPath", userPhoto);
-        outState.putString("userPhotoThumbPath", userPhotoThumb);
-
-        super.onSaveInstanceState(outState);
     }
 
     private void initBoard(boolean start) {
         TextView playerNameDisplay = findViewById(R.id.username);
         TextView timerDisplay = findViewById(R.id.time);
         TextView pointsDisplay = findViewById(R.id.points);
+        //imgUser = findViewById(R.id.imageView);
 
-        final PlayerView playerView = new PlayerView(playerNameDisplay, pointsDisplay, timerDisplay);
+        final PlayerView playerView = new PlayerView(playerNameDisplay, pointsDisplay, timerDisplay, imgUser);
 
-        gameGrid = new GameGrid(this, game, playerView);
-
+        gameGrid = new GameGrid(this, game, playerView, findViewById(R.id.sudokuGridView));
 
         if (start) {
             game.setLevels(Levels.fromInteger(difficulty));
             game.createSudokuGrid(gameGrid);
             game.setGameMode(mode);
+
             setupPlayers();
 
             setObserver();
             setObserverGrid();
+
         } else {
+            mode = game.getGameMode().toString();
+            userName = game.getActivePalyer().getUsername();
+            userPhotoThumb = game.getActivePalyer().getUserPhotoThumbnailPath();
+            userPhoto = game.getActivePalyer().getUserPhotoPath();
+
+            setObserver();
+            setObserverGrid();
+
             game.redrawGame(gameGrid);
         }
 
 
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        //TODO THIS??
+        //game.removeObserver(this);
+        //game.removeObserverGrid(this);
     }
 
     private void setObserver() {
@@ -136,7 +145,8 @@ public class SingleplayerActivity extends AppCompatActivity {
 
     private void setupPlayers() {
         game.addPlayerToList(new Profile(userName, userPhoto, userPhotoThumb));
-        if (mode.equals("multiplayer")) {
+
+        if (mode.equals(GameMode.MULTIPLAYER_SAMEDEVICE.toString())) {
             //here we are also getting the new user for that came from the intent
             String userFriend = getIntent().getStringExtra("myFriendsName") == null ?
                     "My Friend" :
@@ -145,14 +155,13 @@ public class SingleplayerActivity extends AppCompatActivity {
             assert userFriend != null;
 
             if (!userFriend.isEmpty())
-                game.addPlayerToList(new Profile(userFriend, null, null));
+                game.addPlayerToList(new Profile(userFriend));
             else
-                game.addPlayerToList(new Profile("My Friend", null, null));
+                game.addPlayerToList(new Profile("My Friend"));
         }
     }
 
     private void setUserPhotoAndName() {
-        ImageView imgUser = findViewById(R.id.imageView);
         TextView txtUser = findViewById(R.id.username);
 
         Intent intent = getIntent();
@@ -176,6 +185,7 @@ public class SingleplayerActivity extends AppCompatActivity {
         } else {
             imgUser.setImageResource(R.drawable.userphoto);
         }
+
     }
 
     private void printSudoku(int[][] sudokuGrid){

@@ -1,5 +1,8 @@
 package com.example.sudokuamov.game;
 
+import android.os.Handler;
+import android.os.Looper;
+
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
@@ -64,6 +67,17 @@ public class GameEngine {
             ProfileActive = 0;
 
         setCountDown(30);
+
+        //Prepare to animate the grid view
+        //Animations have to be run in a looper thread and must call Looper.prepare because we using this in a TimerTask
+        Looper.prepare();
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                grid.makeAnimation();
+            }
+        }, 100);
+        Looper.loop();
     }
 
     public static GameEngine getInstance() {
@@ -79,6 +93,7 @@ public class GameEngine {
 
         return result;
     }
+
 
     public void addPlayerToList(Profile profile) {
         this.players.add(profile);
@@ -141,12 +156,16 @@ public class GameEngine {
 
             grid = gameGrid;
 
+            //grid.setSudokuCellsByIntArray();//TODO CHANGE THIS TO OBVERVERTRIGGER
 
             changedGrid.postValue(true);
         }
     }
 
     public void redrawGame(GameGrid gameGrid) {
+        // grid = gameGrid;
+        //grid.setSudokuCellsByIntArray();//TODO CHANGE THIS TO OBVERVERTRIGGER
+
         changedGrid.postValue(true);
     }
 
@@ -210,24 +229,48 @@ public class GameEngine {
 
 
     public void setGameMode(String mode) {
-        switch (mode) {
-            case "networkgame":
-                gameMode = GameMode.MULTIPLAYER_MULTIDEVICE;
-                countDown = 30;
-                ProfileActive = 0;
-                timer.schedule(getTimerTask(), 1 * 1000);
-                break;
-            case "multiplayer":
-                gameMode = GameMode.MULTIPLAYER_SAMEDEVICE;
-                ProfileActive = 0;
-                setCountDown(30);
-                break;
-            default:
-                gameMode = GameMode.SINGLEPLAYER;
-                ProfileActive = 0;
+        if (mode.equals(GameMode.SINGLEPLAYER.toString())) {
+            gameMode = GameMode.SINGLEPLAYER;
+            ProfileActive = 0;
+            changedPayer.postValue(true);
+        } else if (mode.equals(GameMode.MULTIPLAYER_SAMEDEVICE.toString())) {
+            gameMode = GameMode.MULTIPLAYER_SAMEDEVICE;
+            ProfileActive = 0;
+            setCountDown(30);
 
-                changedPayer.postValue(true);
+        } else {
+            gameMode = GameMode.MULTIPLAYER_MULTIDEVICE;
+            countDown = 30;
+            ProfileActive = 0;
+            timer.schedule(getTimerTask(), 1 * 1000);
         }
+
+//        switch (mode) {
+//            case "networkgame":
+//                gameMode = GameMode.MULTIPLAYER_MULTIDEVICE;
+//                countDown = 30;
+//                ProfileActive = 0;
+//                timer.schedule(getTimerTask(), 1 * 1000);
+//                break;
+//            case "multiplayer":
+//                gameMode = GameMode.MULTIPLAYER_SAMEDEVICE;
+//
+//
+//                //players.add(new Profile("Pedro", null, null));
+//                //players.add(new Profile("André", null, null));
+//
+//                ProfileActive = 0;
+//
+//                setCountDown(30);
+//                break;
+//            default:
+//                gameMode = GameMode.SINGLEPLAYER;
+//
+//                //players.add(new Profile("Pedro", null, null));
+//                ProfileActive = 0;
+//
+//                changedPayer.postValue(true);
+//        }
     }
 
     public void printSolution() {
@@ -247,16 +290,25 @@ public class GameEngine {
         this.grid = gameGrid;
     }
 
-    public boolean getEndOffGame() {
-        /*if (!SudokuChecker.getInstance().checkSudoku(getGrid().getSudokuCellsInteger()))
-            return false;*/
-
-        /*for (GameCell gc : gameBoard) {
-            if (gc.getValue() != gc.getSolution())
-                return false;
-        }*/
+    public Profile getEndOffGame() {
         int length = getGameBoardArray().length;
-        return SudokuSolver.solveSudoku(getGameBoardArray(), length);
+        Profile winnerProfile = null;
+        int points = 0;
+        //Is sudoku solved
+        if (SudokuSolver.solveSudoku(getGameBoardArray(), length)) {
+            if (gameMode != GameMode.SINGLEPLAYER) {
+                for (Profile profile : players) {
+                    if (profile.getPoints() > points) {
+                        points = profile.getPoints();
+                        winnerProfile = profile;
+                    } else if (profile.getPoints() == points) {
+                        //Tie, do something
+                    }
+                }
+            } else
+                winnerProfile = players.get(0);
+        }
+        return winnerProfile;
     }
 
     public void setActivePlayerPoints() {
@@ -281,10 +333,6 @@ public class GameEngine {
 
     public void removeObserverGrid(Observer<Boolean> observer) {
         changedGrid.removeObserver(observer);
-    }
-
-    public List<Profile> getPlayersList() {
-        return players;
     }
 
 }
