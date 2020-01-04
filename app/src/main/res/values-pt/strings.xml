@@ -24,6 +24,6 @@
     <string name="save_game">Guardar jogo</string>
     <string name="online">Online</string>
     <string name="the_winner_is">O vencedor é:</string>
-    <string name="server" translatable="false">Servidor</string>
-    <string name="client" translatable="false">Cliente</string>
+    <string name="client">Cliente</string>
+    <string name="server">Servidor</string>
 </resources>
