@@ -13,11 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.sudokuamov.activities.helpers.HelperMethods;
-import com.example.sudokuamov.sockets.SocketConnector;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+
+import com.example.sudokuamov.activities.helpers.HelperMethods;
+import com.example.sudokuamov.sockets.SocketConnector;
 
 public class ChooseNetworkMode extends AppCompatActivity implements View.OnClickListener {
 
@@ -59,10 +59,10 @@ public class ChooseNetworkMode extends AppCompatActivity implements View.OnClick
     }
 
     private void setButtonActions() {
-        Button server = findViewById(R.id.Server);
+        Button server = findViewById(R.id.btnServer);
         server.setOnClickListener(this);
 
-        Button client = findViewById(R.id.Client);
+        Button client = findViewById(R.id.btnClient);
         client.setOnClickListener(this);
 
     }
@@ -100,7 +100,7 @@ public class ChooseNetworkMode extends AppCompatActivity implements View.OnClick
         });
 
         switch (view.getId()) {
-            case R.id.Server: {
+            case R.id.btnServer: {
 
                 socketConnector.WaitforClients().start();
 
@@ -125,7 +125,7 @@ public class ChooseNetworkMode extends AppCompatActivity implements View.OnClick
 
                 break;
             }
-            case R.id.Client: {
+            case R.id.btnClient: {
                 final EditText taskEditText = new EditText(this);
                 AlertDialog dialog = new AlertDialog.Builder(this)
                         .setTitle("Insert Server IP")

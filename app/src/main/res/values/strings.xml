@@ -10,8 +10,7 @@
     <string name="email" translatable="false">Email</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
-    <string name="server">Server</string>
-    <string name="client">Client</string>
+    <string name="server_str">Server</string>
     <string name="help">Help</string>
     <string name="register">Register</string>
     <string name="take_picture">Take Picture</string>
@@ -27,4 +26,8 @@
     <string name="save_game">Save Game</string>
     <string name="online">Online</string>
     <string name="the_winner_is">The Winner is:</string>
+    <string name="client_str">Client</string>
+    <string name="player">Player</string>
+    <string name="time_left_str">Time Left</string>
+    <string name="seconds_min">sec</string>
 </resources>
