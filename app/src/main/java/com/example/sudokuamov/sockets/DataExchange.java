@@ -32,23 +32,12 @@ public class DataExchange {
 
     public enum Operation {
         CheckNewGamePlay,
-        GetImage,
+        SetCellValue,
+        SetCellRed,
         SetTime,
-        ChangePlayer,
         setPlayerList,
         setPlayerName,
         SetGameBoar
     }
 
-    class GamePlay {
-        public int newNum;
-        public int poisitionX;
-        public int positionY;
-
-        public GamePlay(int newNum, int poisitionX, int positionY) {
-            this.newNum = newNum;
-            this.poisitionX = poisitionX;
-            this.positionY = positionY;
-        }
-    }
 }

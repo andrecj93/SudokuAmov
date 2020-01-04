@@ -194,13 +194,7 @@ public class SocketConnector {
         }
     }
 
-    private void setGameBoard(List<GameCell> gameBoard) {
-        GameEngine.getInstance().setGameBoard(gameBoard);
-    }
 
-    private String getSocketIp(Socket socket) {
-        return socket.getInetAddress().toString().replace('.', '-').replace("/", "");
-    }
 
     public void sendInfoToAllClients(final String message) {
         synchronized (mutexSend) {
@@ -252,6 +246,16 @@ public class SocketConnector {
                             case SetTime:
                                 setTime(exchange.newTime);
                                 break;
+                            case CheckNewGamePlay:
+                                checkGamePlay(exchange.gamePlay, getSocketIp(socket));
+                                break;
+                            case SetCellRed:
+
+                                break;
+                            case SetCellValue:
+                                setGameBoard(exchange.gameBoard);
+                                setPlayerList(exchange.profileList, exchange.profileActive);
+                                break;
                         }
                     } catch (Exception e) {
                         Log.d("ERRO A RECEBER", e.getMessage());
@@ -262,9 +266,65 @@ public class SocketConnector {
         }).start();
     }
 
+    private void setCellRed(GamePlay gamePlay) {
+
+    }
+
+
+    private void checkGamePlay(GamePlay gamePlay, String ip) {
+        GameEngine gameEngine = GameEngine.getInstance();
+
+        if (ip.equals(gameEngine.getActivePalyer().getIp()))
+            gameEngine.setRemoteNumber(gamePlay.poisitionX, gamePlay.positionY, gamePlay.newNum);
+    }
+
+    private void setPlayerList(List<Profile> clientSocketList, int activePlayer) {
+        if (AmIserver == SERVER)
+            return;
+
+        GameEngine gameEngine = GameEngine.getInstance();
+
+        gameEngine.removeAllPlayers();
+
+        String IpString = socketGame.getInetAddress().toString().replace('.', '-');
+
+        for (Profile profile : clientSocketList) {
+
+            if (IpString.equals(profile.getIp()))
+                gameEngine.setMyProfile(gameEngine.getMyProfile());
+            else
+                gameEngine.addPlayerToList(profile);
+        }
+
+        gameEngine.setProfileActive(activePlayer);
+    }
+
+    private void setPlayerName(String name, String ip) {
+        Profile p = GameEngine.getInstance().getThisPlayers(ip);
+
+        if (p != null) {
+            p.setUsername(name);
+            GameEngine gameEngine = GameEngine.getInstance();
+
+            DataExchange dataExchange = new DataExchange(DataExchange.Operation.setPlayerList, null, null, gameEngine.getAllPlayers(), 0, null, 0);
+
+            this.sendInfoToAllClients(dataExchange.getJSON());
+        }
+    }
+
+
+    private void setGameBoard(List<GameCell> gameBoard) {
+        GameEngine.getInstance().setGameBoard(gameBoard);
+    }
+
     private void setTime(int time) {
         GameEngine.getInstance().setTimer(time);
     }
+
+    private String getSocketIp(Socket socket) {
+        return socket.getInetAddress().toString().replace('.', '-').replace("/", "");
+    }
+
 
     public void sendInfo(final Socket socket, final String message) {
 
@@ -291,14 +351,14 @@ public class SocketConnector {
         }
     }
 
-    public String getMySocketIpAddress(Socket socket) {
+    /*public String getMySocketIpAddress(Socket socket) {
         try {
             return socket.getInetAddress().toString();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
-    }
+    }*/
 
     private void SendFileImage(Socket socket, String filepath) {
         OutputStream out = null;
@@ -365,40 +425,6 @@ public class SocketConnector {
                 if (bos != null) bos.close();
             } catch (Exception e) {
             }
-        }
-    }
-
-    private void setPlayerList(List<Profile> clientSocketList, int activePlayer) {
-        if (AmIserver == SERVER)
-            return;
-
-        GameEngine gameEngine = GameEngine.getInstance();
-
-        gameEngine.removeAllPlayers();
-
-        String IpString = socketGame.getInetAddress().toString().replace('.', '-');
-
-        for (Profile profile : clientSocketList) {
-
-            if (IpString.equals(profile.getIp()))
-                gameEngine.setMyProfile(gameEngine.getMyProfile());
-            else
-                gameEngine.addPlayerToList(profile);
-        }
-
-        gameEngine.setProfileActive(activePlayer);
-    }
-
-    private void setPlayerName(String name, String ip) {
-        Profile p = GameEngine.getInstance().getThisPlayers(ip);
-
-        if (p != null) {
-            p.setUsername(name);
-            GameEngine gameEngine = GameEngine.getInstance();
-
-            DataExchange dataExchange = new DataExchange(DataExchange.Operation.setPlayerList, null, null, gameEngine.getAllPlayers(), 0, null, 0);
-
-            this.sendInfoToAllClients(dataExchange.getJSON());
         }
     }
 

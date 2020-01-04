@@ -7,6 +7,7 @@ import com.example.sudokuamov.game.helpers.Configurations;
 import com.example.sudokuamov.game.helpers.GameMode;
 import com.example.sudokuamov.game.helpers.Levels;
 import com.example.sudokuamov.sockets.DataExchange;
+import com.example.sudokuamov.sockets.GamePlay;
 import com.example.sudokuamov.sockets.SocketConnector;
 import com.example.sudokuamov.view.GameGrid;
 
@@ -315,18 +316,56 @@ public class GameEngine {
         this.levels = levels;
     }
 
+
+    public void setRemoteNumber(int x, int y, int number) {
+        setSelectedPositions(x, y);
+        setNumber(number);
+    }
+
+
     public void setSelectedPositions(int x, int y) {
         this.selectedPosX = x;
         this.selectedPosY = y;
     }
 
     public void setNumber(int number) {
-        if (selectedPosX != -1 && selectedPosY != -1) {
-            grid.setItem(selectedPosX, selectedPosY, number);
+        if (selectedPosX < 0 || selectedPosY < 0) {
+            return;
         }
 
-        grid.checkGame();
+
+        if (gameMode == GameMode.MULTIPLAYER_MULTIDEVICE) { //Client ACTIONS
+            if (SocketConnector.getAmIserver() == SocketConnector.CLIENT) {
+                DataExchange dataExchange = new DataExchange(DataExchange.Operation.CheckNewGamePlay, null, new GamePlay(number, selectedPosX, selectedPosY), null, 0, null, 0);
+
+                SocketConnector.getInstance().sendClientInfo(dataExchange.getJSON());
+                return;
+            }
+        }
+
+
+        if (grid.setItem(selectedPosX, selectedPosY, number)) {
+            if (gameMode == GameMode.MULTIPLAYER_MULTIDEVICE) {//SERVER ACTIONS
+                if (SocketConnector.getAmIserver() == SocketConnector.SERVER) {
+                    DataExchange dataExchange = new DataExchange(DataExchange.Operation.SetCellValue, this.gameBoard, null, this.players, this.getProfileActive(), null, 0);
+
+                    SocketConnector.getInstance().sendInfoToAllClients(dataExchange.getJSON());
+                }
+            }
+
+
+            grid.checkGame();
+        } else {
+            if (gameMode == GameMode.MULTIPLAYER_MULTIDEVICE) {//SERVER ACTIONS
+                if (SocketConnector.getAmIserver() == SocketConnector.SERVER) {
+                    DataExchange dataExchange = new DataExchange(DataExchange.Operation.SetCellRed, null, new GamePlay(number, selectedPosX, selectedPosY), null, 0, null, 0);
+
+                    SocketConnector.getInstance().sendInfoToAllClients(dataExchange.getJSON());
+                }
+            }
+        }
     }
+
 
     public void GetPosssibleNumber() {
         if (selectedPosX != -1 && selectedPosY != -1) {

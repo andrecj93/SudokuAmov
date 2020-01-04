@@ -90,24 +90,23 @@ public class GameGrid {
         return sudokuCells[x][y];
     }
 
-
-    public void setItem(final int x, final int y, final int number) {
+    public boolean setItem(final int x, final int y, final int number) {
         if (sudokuCells[x][y].isRed()) {
             Toast.makeText(context, "Wait 3 sec After a Fail.", Toast.LENGTH_LONG).show();
-            return;
+            return false;
         }
 
         sudokuCells[x][y].setValue(number);
 
         if (number == 0) {
             gameEngine.getGameCell(x, y).setValue(0);
-            return;
+            return false;
         }
-
 
         if (gameEngine.checkNewNumberFill(x, y, number)) {
             gameEngine.getGameCell(x, y).setValue(number);
             gameEngine.setActivePlayerPoints();
+            return true;
         } else {
             sudokuCells[x][y].setRed();
 
@@ -117,9 +116,26 @@ public class GameGrid {
                     sudokuCells[x][y].setValue(0);
                 }
             }, 3000);
+            return false;
         }
+    }
 
-        this.checkGame();
+
+    public void setCellRed(final int x, final int y, final int number) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                sudokuCells[x][y].setRed();
+
+                try {
+                    wait(3000);
+                } catch (InterruptedException e) {
+
+                }
+                sudokuCells[x][y].setValue(0);
+            }
+        }, 0);
+
     }
 
     public int[][] getSudokuCellsInteger() {
@@ -134,6 +150,7 @@ public class GameGrid {
 
         return sudGrid;
     }
+
 
     public boolean isAllCellsFilled() {
         for (int x = 0; x < Configurations.GRID9; x++) {
