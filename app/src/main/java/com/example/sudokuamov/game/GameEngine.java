@@ -353,7 +353,6 @@ public class GameEngine {
                 }
             }
 
-
             grid.checkGame();
         } else {
             if (gameMode == GameMode.MULTIPLAYER_MULTIDEVICE) {//SERVER ACTIONS
@@ -378,23 +377,12 @@ public class GameEngine {
         return gameMode;
     }
 
-   /* public void printSolution() {
-        int[][] arr = new int[9][9];
-        System.out.println("---Sudoku Solution---");
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                arr[i][j] = getGameCell(i, j);
-                System.out.print(arr[i][j] + "|");
-            }
-            System.out.println();
-        }
-
-    }*/
 
     public void setGameMode(String mode) {
         if (mode.equals(GameMode.SINGLEPLAYER.toString())) {
             gameMode = GameMode.SINGLEPLAYER;
             ProfileActive = 0;
+            if (timer != null) timer.cancel();
             changedPayer.postValue(true);
         } else if (mode.equals(GameMode.MULTIPLAYER_SAMEDEVICE.toString())) {
             gameMode = GameMode.MULTIPLAYER_SAMEDEVICE;

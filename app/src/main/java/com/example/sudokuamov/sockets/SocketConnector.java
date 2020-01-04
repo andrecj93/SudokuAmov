@@ -250,7 +250,7 @@ public class SocketConnector {
                                 checkGamePlay(exchange.gamePlay, getSocketIp(socket));
                                 break;
                             case SetCellRed:
-
+                                setCellRed(exchange.gamePlay);
                                 break;
                             case SetCellValue:
                                 setGameBoard(exchange.gameBoard);
@@ -267,9 +267,8 @@ public class SocketConnector {
     }
 
     private void setCellRed(GamePlay gamePlay) {
-
+        GameEngine.getInstance().getGrid().setCellRed(gamePlay.poisitionX, gamePlay.positionY, gamePlay.newNum);
     }
-
 
     private void checkGamePlay(GamePlay gamePlay, String ip) {
         GameEngine gameEngine = GameEngine.getInstance();
