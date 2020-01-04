@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="textSizeButtonMain">25sp</dimen>
+    <dimen name="buttonLevels">20sp</dimen>
+
+
+    <dimen name="buttonLevelWidth">250dp</dimen>
+    <dimen name="buttonLevelsHeight">50dp</dimen>
+</resources>
