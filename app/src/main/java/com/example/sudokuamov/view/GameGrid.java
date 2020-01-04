@@ -96,26 +96,33 @@ public class GameGrid {
             return false;
         }
 
-        sudokuCells[x][y].setValue(number);
-
         if (number == 0) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    sudokuCells[x][y].setValue(number);
+                }
+            }, 0);
+
             gameEngine.getGameCell(x, y).setValue(0);
             return false;
         }
 
         if (gameEngine.checkNewNumberFill(x, y, number)) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    sudokuCells[x][y].setValue(number);
+                }
+            }, 0);
+
             gameEngine.getGameCell(x, y).setValue(number);
             gameEngine.setActivePlayerPoints();
             return true;
         } else {
-            sudokuCells[x][y].setRed();
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    sudokuCells[x][y].setValue(0);
-                }
-            }, 3000);
+            setCellRed(x, y, number);
+
             return false;
         }
     }
@@ -125,17 +132,19 @@ public class GameGrid {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                sudokuCells[x][y].setValue(number);
+
                 sudokuCells[x][y].setRed();
-
-                try {
-                    wait(3000);
-                } catch (InterruptedException e) {
-
-                }
-                sudokuCells[x][y].setValue(0);
             }
         }, 0);
 
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                sudokuCells[x][y].setValue(0);
+            }
+        }, 3000);
     }
 
     public int[][] getSudokuCellsInteger() {
