@@ -115,10 +115,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             mode = game.getGameMode().toString();
 
-            /*userName = game.getActivePalyer().getUsername();
-            userPhotoThumb = game.getActivePalyer().getUserPhotoThumbnailPath();
-            userPhoto = game.getActivePalyer().getUserPhotoPath();*/
-
             setObserver();
             setObserverGrid();
 
@@ -231,11 +227,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.buttonSinglePlayer: {
-                game.setGameMode("SINGLEPLAYER", true);
-                break;
-            }
+        if (view.getId() == R.id.buttonSinglePlayer) {
+            game.setGameMode("SINGLEPLAYER", true);
         }
     }
 
