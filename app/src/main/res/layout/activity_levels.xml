@@ -23,7 +23,7 @@
     <Button
         android:id="@+id/VeryEasyButton"
         android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/other_button_style"
         android:text="@string/newbie"
@@ -37,7 +37,7 @@
     <Button
         android:id="@+id/EasyButton"
         android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_height="50dp"
         android:background="@drawable/other_button_style"
         android:text="@string/easy"
         android:textColor="@color/colorPrimaryDark"
@@ -50,7 +50,7 @@
     <Button
         android:id="@+id/MediumButton"
         android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_height="50dp"
         android:background="@drawable/other_button_style"
         android:text="@string/medium"
         android:textColor="@color/colorPrimaryDark"
@@ -63,7 +63,7 @@
     <Button
         android:id="@+id/HardButton"
         android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_height="50dp"
         android:background="@drawable/other_button_style"
         android:text="@string/hard"
         android:textColor="@color/colorPrimaryDark"
@@ -76,7 +76,7 @@
     <Button
         android:id="@+id/VeryHardButton"
         android:layout_width="0dp"
-        android:layout_height="70dp"
+        android:layout_height="50dp"
         android:background="@drawable/other_button_style"
         android:text="@string/veryHard"
         android:textColor="@color/colorPrimaryDark"

@@ -9,6 +9,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+
 import com.example.sudokuamov.game.GameEngine;
 import com.example.sudokuamov.game.Profile;
 import com.example.sudokuamov.game.helpers.Configurations;
@@ -19,9 +22,6 @@ import com.example.sudokuamov.view.GameGrid;
 import com.example.sudokuamov.view.PlayerView;
 
 import java.io.File;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
     String mode;
@@ -61,7 +61,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         buttonSinglePlayer.setOnClickListener(this);
 
 
-        //disableViews();
+        disableViews();
     }
 
     @Override
@@ -76,8 +76,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void disableViews() {
-        if (game.getGameMode().equals(GameMode.SINGLEPLAYER))
-            findViewById(R.id.time).setVisibility(View.GONE);
+        if (game.getGameMode().equals(GameMode.SINGLEPLAYER)) {
+            findViewById(R.id.buttonSinglePlayer).setVisibility(View.INVISIBLE);
+            findViewById(R.id.time).setVisibility(View.INVISIBLE);
+        }
     }
 
     private void initBoard(boolean start) {

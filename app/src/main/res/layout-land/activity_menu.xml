@@ -11,7 +11,7 @@
     <Button
         android:id="@+id/buttonSinglePlayer"
         android:layout_width="0dp"
-        android:layout_height="75dp"
+        android:layout_height="40dp"
         android:background="@drawable/other_button_style"
         android:text="@string/single_player"
         android:textColor="@color/colorPrimaryDark"
@@ -24,7 +24,7 @@
     <Button
         android:id="@+id/buttonTwoPlayer"
         android:layout_width="0dp"
-        android:layout_height="75dp"
+        android:layout_height="40dp"
         android:background="@drawable/other_button_style"
         android:text="@string/two_players"
         android:textColor="@color/colorPrimaryDark"
@@ -37,15 +37,40 @@
     <Button
         android:id="@+id/buttonNetworkGame"
         android:layout_width="0dp"
-        android:layout_height="75dp"
+        android:layout_height="40dp"
         android:background="@drawable/other_button_style"
         android:text="@string/online"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/textSizeButtonMain"
-        app:layout_constraintBottom_toTopOf="@id/guideline4"
+        app:layout_constraintBottom_toTopOf="@id/buttonHistory"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/buttonTwoPlayer" />
+
+    <Button
+        android:id="@+id/buttonHistory"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:background="@drawable/other_button_style"
+        android:text="@string/history"
+        android:textSize="@dimen/textSizeButtonMain"
+
+        app:layout_constraintBottom_toTopOf="@id/buttonCredits"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/buttonNetworkGame" />
+
+    <Button
+        android:id="@+id/buttonCredits"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:background="@drawable/other_button_style"
+        android:text="@string/credits"
+        android:textSize="@dimen/textSizeButtonMain"
+        app:layout_constraintBottom_toTopOf="@+id/guideline4"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@id/buttonHistory" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
