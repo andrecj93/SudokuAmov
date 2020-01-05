@@ -26,6 +26,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameGrid {
@@ -138,6 +139,7 @@ public class GameGrid {
 
 
             gameEngine.setActivePlayerPoints();
+
             return true;
         } else {
             if (sudokuCells[x][y].getIsModifiable())
@@ -233,7 +235,7 @@ public class GameGrid {
         String pathToSaveHistory = context.getExternalFilesDir(null) + "/" + "gameHistory.json";
 
         Gson gson = new Gson();
-        List<GameInfoHistory> historyList = null;
+        List<GameInfoHistory> historyList = new ArrayList<>();
 
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(pathToSaveHistory));

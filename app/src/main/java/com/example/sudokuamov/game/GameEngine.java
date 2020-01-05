@@ -383,12 +383,20 @@ public class GameEngine {
     }
 
 
-    public void setGameMode(String mode) {
+    public void setGameMode(String mode, boolean reset) {
         if (mode.equals(GameMode.SINGLEPLAYER.toString())) {
 
             gameMode = GameMode.SINGLEPLAYER;
             ProfileActive = 0;
-            if (timer != null) timer.cancel();
+            this.countDown = 0;
+
+            if (reset) {
+                players.clear();
+                players.add(myProfile);
+                if (timer != null) timer.cancel();
+            }
+
+
             changedPayer.postValue(true);
         } else if (mode.equals(GameMode.MULTIPLAYER_SAMEDEVICE.toString())) {
             gameMode = GameMode.MULTIPLAYER_SAMEDEVICE;

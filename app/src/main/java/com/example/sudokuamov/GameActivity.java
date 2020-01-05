@@ -87,7 +87,7 @@ public class GameActivity extends AppCompatActivity {
         if (start) {
             game.setLevels(Levels.fromInteger(difficulty));
 
-            game.setGameMode(mode);
+            game.setGameMode(mode, false);
 
             setupPlayers();
 
@@ -151,6 +151,7 @@ public class GameActivity extends AppCompatActivity {
         Profile profile = new Profile(userName, userPhoto, userPhotoThumb, "SERVER");
 
         game.addPlayerToList(profile);
+        game.setMyProfile(profile);
 
 
         if (mode.equals(GameMode.MULTIPLAYER_SAMEDEVICE.toString())) {
@@ -191,7 +192,6 @@ public class GameActivity extends AppCompatActivity {
         userName = intent.getStringExtra("nickName");
         userPhoto = intent.getStringExtra("userPhotoPath");
         userPhotoThumb = intent.getStringExtra("userPhotoThumbPath");
-
         game.setThisIsMe(new Profile(userName, userPhoto, userPhotoThumb, null));
 
         if (userName.equals(""))
