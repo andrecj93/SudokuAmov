@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.sudokuamov.activities.helpers.HelperMethods;
+
 import java.util.Locale;
 
 public class AfterGameActivity extends AppCompatActivity implements View.OnClickListener {
@@ -17,6 +19,7 @@ public class AfterGameActivity extends AppCompatActivity implements View.OnClick
     Button continueBtn;
     TextView tvPoints, tvUserName;
 
+    String userName, userPhoto, userPhotoThumb;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,13 +40,21 @@ public class AfterGameActivity extends AppCompatActivity implements View.OnClick
         tvUserName.setText(userWinner);
         tvPoints.setText(strPoints);
 
+
+        userName = intent.getStringExtra("defaultUserName");
+        userPhoto = intent.getStringExtra("defaultUserPhoto");
+        userPhotoThumb = intent.getStringExtra("defaultUserPhotoThumbnail");
     }
 
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.continueBtn) {
-            startActivity(new Intent(this, MenuActivity.class));
+
+            final Intent intent = HelperMethods.makeIntentForUserNameAndPhoto(new String[]{userName, userPhoto, userPhotoThumb},
+                    this, MenuActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 }

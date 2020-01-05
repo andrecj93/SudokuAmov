@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.sudokuamov.activities.ProfileActivity;
 import com.example.sudokuamov.activities.helpers.HelperMethods;
 import com.example.sudokuamov.game.GameEngine;
@@ -20,8 +22,6 @@ import com.example.sudokuamov.game.helpers.GameMode;
 import com.example.sudokuamov.sockets.SocketConnector;
 
 import java.io.File;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class MenuActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -69,6 +69,11 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
         mClickButton2.setOnClickListener(this);
         Button mClickButton3 = findViewById(R.id.buttonNetworkGame);
         mClickButton3.setOnClickListener(this);
+
+        Button historyBtn = findViewById(R.id.buttonHistory);
+        historyBtn.setOnClickListener(this);
+        Button creditsBtn = findViewById(R.id.buttonCredits);
+        creditsBtn.setOnClickListener(this);
     }
 
     private void setUserPhotoAndName() {
@@ -148,6 +153,19 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
                 break;
             }
+
+            case R.id.buttonHistory: {
+                Intent intentHistory = new Intent(this, HistoryActivity.class);
+                startActivity(intentHistory);
+                break;
+            }
+
+            case R.id.buttonCredits: {
+                //Intent intentCredits = new Intent(this, HistoryActivity.class);
+                //startActivity(intentCredits);
+
+            }
+
             default:
 
                 break;

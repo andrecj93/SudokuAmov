@@ -14,12 +14,63 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:stretchColumns="1"
+        android:shrinkColumns="*"
+        android:stretchColumns="*"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <!-- first row of the table layout-->
+        <TableRow
+            android:id="@+id/firstRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <!-- first element of the row-->
+            <TextView
+                android:id="@+id/column1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#b0b0b0"
+                android:gravity="center"
+                android:padding="18dip"
+                android:text="Modo de Jogo"
+                android:textColor="#000"
+                android:textSize="12dp" />
+
+            <TextView
+                android:id="@+id/column2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#AA6E6E"
+                android:gravity="center"
+                android:padding="18dip"
+                android:text="Dificuldade"
+                android:textColor="#000"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/column3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#6BCFA5"
+                android:gravity="center"
+                android:padding="18dip"
+                android:text="Jogadores"
+                android:textColor="#000"
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/column4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#FF0000"
+                android:gravity="center"
+                android:padding="18dip"
+                android:text="Vencedor"
+                android:textColor="#000"
+                android:textSize="14dp" />
+        </TableRow>
 
     </TableLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -29,4 +29,7 @@
     <string name="player">Jogador</string>
     <string name="time_left_str">Tempo</string>
     <string name="seconds_min">seg</string>
+    <string name="history">Histórico</string>
+    <string name="credits">Creditos</string>
+    <string name="no_games_were_found">Não foram encontrados jogos</string>
 </resources>

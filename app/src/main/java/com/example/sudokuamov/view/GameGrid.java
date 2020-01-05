@@ -19,11 +19,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameGrid {
@@ -205,6 +207,10 @@ public class GameGrid {
                         }, context, AfterGameActivity.class));
                 intent.putExtra("winnerPoints", checkWinner.getPoints());
 
+                intent.putExtra("defaultUserName", gameEngine.getThisIsMe().getUsername());
+                intent.putExtra("defaultUserPhoto", gameEngine.getThisIsMe().getUserPhotoPath());
+                intent.putExtra("defaultUserPhotoThumbnail", gameEngine.getThisIsMe().getUserPhotoThumbnailPath());
+
                 saveGameInfoInHistory();
 
                 context.startActivity(intent);
@@ -217,7 +223,7 @@ public class GameGrid {
     }
 
 
-    public void saveGameInfoInHistory() {
+    private void saveGameInfoInHistory() {
         GameInfoHistory gameInfoHistory = new GameInfoHistory(
                 gameEngine.getWinnerProfile(),
                 gameEngine.getAllPlayers(),
@@ -227,21 +233,26 @@ public class GameGrid {
         String pathToSaveHistory = context.getExternalFilesDir(null) + "/" + "gameHistory.json";
 
         Gson gson = new Gson();
-        List<GameInfoHistory> historyList = new ArrayList<>();
+        List<GameInfoHistory> historyList = null;
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(pathToSaveHistory));
+            Type type = new TypeToken<List<GameInfoHistory>>() {
+            }.getType();
+
+            historyList = gson.fromJson(bufferedReader, type);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         historyList.add(gameInfoHistory);
-        String toJson = gson.toJson(historyList);
 
-        Type type = new TypeToken<List<GameInfoHistory>>() {
-        }.getType();
-        List<GameInfoHistory> gameInfoHistoryList = new Gson().fromJson(toJson, type);
 
-//        if (!gameInfoHistoryList.contains(gameInfoHistory))
-//            gameInfoHistoryList.add(gameInfoHistory);
-
-        //Write new json class
+        //Write new json class with the new history
         try (Writer writer = new FileWriter(pathToSaveHistory)) {
             Gson gson_ = new GsonBuilder().setPrettyPrinting().create();
-            gson_.toJson(gameInfoHistoryList, writer);
+            gson_.toJson(historyList, writer);
         } catch (IOException e) {
             e.printStackTrace();
         }

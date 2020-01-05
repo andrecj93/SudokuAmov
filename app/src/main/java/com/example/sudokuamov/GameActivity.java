@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+
 import com.example.sudokuamov.game.GameEngine;
 import com.example.sudokuamov.game.Profile;
 import com.example.sudokuamov.game.helpers.Configurations;
@@ -18,9 +21,6 @@ import com.example.sudokuamov.view.GameGrid;
 import com.example.sudokuamov.view.PlayerView;
 
 import java.io.File;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 
 public class GameActivity extends AppCompatActivity {
     String mode;
@@ -191,6 +191,8 @@ public class GameActivity extends AppCompatActivity {
         userName = intent.getStringExtra("nickName");
         userPhoto = intent.getStringExtra("userPhotoPath");
         userPhotoThumb = intent.getStringExtra("userPhotoThumbPath");
+
+        game.setThisIsMe(new Profile(userName, userPhoto, userPhotoThumb, null));
 
         if (userName.equals(""))
             userName = "user1";

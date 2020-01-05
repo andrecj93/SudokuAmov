@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ChooseNetworkMode"></activity>
+        <activity android:name=".ChooseNetworkMode" />
         <activity android:name=".AfterGameActivity" />
         <activity android:name=".activities.ProfileActivity">
             <intent-filter>
@@ -32,6 +32,7 @@
         <activity android:name=".LevelsActivity" />
         <activity android:name=".MenuActivity" />
         <activity android:name=".GameActivity" />
+        <activity android:name=".HistoryActivity" />
     </application>
 
 </manifest>

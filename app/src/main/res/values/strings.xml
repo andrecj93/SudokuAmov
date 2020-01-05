@@ -30,4 +30,7 @@
     <string name="player">Player</string>
     <string name="time_left_str">Time Left</string>
     <string name="seconds_min">sec</string>
+    <string name="history">History</string>
+    <string name="credits">Credits</string>
+    <string name="no_games_were_found">No games were found</string>
 </resources>

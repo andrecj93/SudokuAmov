@@ -37,6 +37,7 @@ public class GameEngine {
     private Timer timer;
     private int countDown;
     private int ProfileActive;
+    private Profile thisIsMe;
 
 
     public GameEngine() {
@@ -448,6 +449,14 @@ public class GameEngine {
 
     public void removeObserverGrid(LifecycleOwner lifecycleOwner) {
         changedGrid.removeObservers(lifecycleOwner);
+    }
+
+    public Profile getThisIsMe() {
+        return thisIsMe;
+    }
+
+    public void setThisIsMe(Profile thisIsMe) {
+        this.thisIsMe = thisIsMe;
     }
 
 
