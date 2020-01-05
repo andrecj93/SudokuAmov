@@ -8,9 +8,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-
 import com.example.sudokuamov.game.GameEngine;
 import com.example.sudokuamov.game.Profile;
 import com.example.sudokuamov.game.helpers.Configurations;
@@ -21,6 +18,9 @@ import com.example.sudokuamov.view.GameGrid;
 import com.example.sudokuamov.view.PlayerView;
 
 import java.io.File;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 public class GameActivity extends AppCompatActivity {
     String mode;
@@ -35,9 +35,11 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_game);
 
         game = GameEngine.getInstance();
+
         imgUser = findViewById(R.id.imageView);
 
         //activity is being created for the first time
@@ -50,10 +52,11 @@ public class GameActivity extends AppCompatActivity {
             difficulty = intent.getIntExtra("Difficulty", 0);
             initBoard(true);
         } else {
+
             initBoard(false);
         }
 
-        disableViews();
+        //disableViews();
     }
 
     @Override
@@ -106,29 +109,24 @@ public class GameActivity extends AppCompatActivity {
         } else {
             mode = game.getGameMode().toString();
 
-            userName = game.getActivePalyer().getUsername();
+            /*userName = game.getActivePalyer().getUsername();
             userPhotoThumb = game.getActivePalyer().getUserPhotoThumbnailPath();
-            userPhoto = game.getActivePalyer().getUserPhotoPath();
+            userPhoto = game.getActivePalyer().getUserPhotoPath();*/
 
             setObserver();
             setObserverGrid();
 
             game.redrawGame(gameGrid);
         }
-
-
     }
 
     @Override
     protected void onStop() {
+        super.onStop();
         game.removeObserver(this);
         game.removeObserverGrid(this);
-
-        game.resetGame();
-        finish();
-
-        super.onStop();
     }
+
 
     private void setObserver() {
         game.setObserver(this, new Observer<Boolean>() {
@@ -150,8 +148,7 @@ public class GameActivity extends AppCompatActivity {
 
 
     private void setupPlayers() {
-        Profile profile = new Profile(userName, userPhoto, userPhotoThumb, null);
-        game.setMyProfile(profile);
+        Profile profile = new Profile(userName, userPhoto, userPhotoThumb, "SERVER");
 
         game.addPlayerToList(profile);
 
@@ -176,6 +173,14 @@ public class GameActivity extends AppCompatActivity {
             socketConnector.startReceivingData();
 
             socketConnector.actualizaPlayerList(game);
+
+            if (SocketConnector.getAmIserver() == SocketConnector.SERVER) {
+                game.setMyProfile(profile);
+            } else {
+                profile.setIp(SocketConnector.getLocalIpAddress());
+
+                game.setMyProfile(profile);
+            }
         }
     }
 

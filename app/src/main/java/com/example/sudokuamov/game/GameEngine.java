@@ -23,6 +23,7 @@ import java.util.TimerTask;
 public class GameEngine {
     private static final Object mutex = new Object();
     private static final Object mutexGameboard = new Object();
+
     private static GameEngine instance;
     MutableLiveData<Boolean> changedPayer = new MutableLiveData<>();
     MutableLiveData<Boolean> changedGrid = new MutableLiveData<>();
@@ -211,14 +212,11 @@ public class GameEngine {
 
     public void setGameBoard(List<GameCell> gameBoard) {
         synchronized (mutexGameboard) {
-
             for (int i = 0; i < this.gameBoard.size(); i++) {
                 this.gameBoard.get(i).setValue(gameBoard.get(i).getValue());
                 this.gameBoard.get(i).setChangeable(gameBoard.get(i).isChangeable());
             }
-
         }
-
         changedGrid.postValue(true);
     }
 
@@ -319,7 +317,7 @@ public class GameEngine {
 
     public void setRemoteNumber(int x, int y, int number) {
         setSelectedPositions(x, y);
-        setNumber(number);
+        setNumber(number, true);
     }
 
 
@@ -328,7 +326,7 @@ public class GameEngine {
         this.selectedPosY = y;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(int number, boolean isRemote) {
         if (selectedPosX < 0 || selectedPosY < 0) {
             return;
         }
@@ -341,6 +339,12 @@ public class GameEngine {
                 SocketConnector.getInstance().sendClientInfo(dataExchange.getJSON());
                 return;
             }
+
+            if (!isRemote)
+                if (SocketConnector.getAmIserver() == SocketConnector.SERVER) {
+                    if (!this.getActivePalyer().getIp().equals("SERVER"))
+                        return;
+                }
         }
 
 
@@ -380,6 +384,7 @@ public class GameEngine {
 
     public void setGameMode(String mode) {
         if (mode.equals(GameMode.SINGLEPLAYER.toString())) {
+
             gameMode = GameMode.SINGLEPLAYER;
             ProfileActive = 0;
             if (timer != null) timer.cancel();
@@ -391,6 +396,7 @@ public class GameEngine {
 
         } else {
             gameMode = GameMode.MULTIPLAYER_MULTIDEVICE;
+
             if (SocketConnector.getAmIserver() == SocketConnector.SERVER) {
                 ProfileActive = 0;
                 setCountDown(30);

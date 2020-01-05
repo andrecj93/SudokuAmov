@@ -13,11 +13,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-
 import com.example.sudokuamov.activities.helpers.HelperMethods;
 import com.example.sudokuamov.sockets.SocketConnector;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 public class ChooseNetworkMode extends AppCompatActivity implements View.OnClickListener {
 
