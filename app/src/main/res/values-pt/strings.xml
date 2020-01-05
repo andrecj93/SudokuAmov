@@ -36,4 +36,5 @@
     <string name="dificuldade">Dificuldade</string>
     <string name="players">Jogadores</string>
     <string name="winner">Vencedor</string>
+    <string name="credits_str">O algoritmo para resolver o sudoku foi obtido a partir de:  \n https://www.geeksforgeeks.org/sudoku-backtracking-7  \n\n Desenvolvido por: André Jordão, Pedro Rodrigues e Luís Viegas. \n@Janeiro, 2020</string>
 </resources>

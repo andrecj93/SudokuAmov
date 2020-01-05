@@ -161,9 +161,9 @@ public class MenuActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             case R.id.buttonCredits: {
-                //Intent intentCredits = new Intent(this, HistoryActivity.class);
-                //startActivity(intentCredits);
-
+                Intent intentCredits = new Intent(this, CreditsActivity.class);
+                startActivity(intentCredits);
+                break;
             }
 
             default:

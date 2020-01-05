@@ -152,7 +152,6 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-
         textureView = findViewById(R.id.textureViewUserImage);
         editTextNick = findViewById(R.id.nickName);
         Intent intent = getIntent();
