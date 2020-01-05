@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,7 +23,7 @@ import java.io.File;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity implements View.OnClickListener {
     String mode;
     int difficulty = 0;
     //Singleton to run for the entire game
@@ -56,6 +57,10 @@ public class GameActivity extends AppCompatActivity {
             initBoard(false);
         }
 
+        Button buttonSinglePlayer = findViewById(R.id.buttonSinglePlayer);
+        buttonSinglePlayer.setOnClickListener(this);
+
+
         //disableViews();
     }
 
@@ -87,7 +92,7 @@ public class GameActivity extends AppCompatActivity {
         if (start) {
             game.setLevels(Levels.fromInteger(difficulty));
 
-            game.setGameMode(mode);
+            game.setGameMode(mode, false);
 
             setupPlayers();
 
@@ -151,6 +156,7 @@ public class GameActivity extends AppCompatActivity {
         Profile profile = new Profile(userName, userPhoto, userPhotoThumb, "SERVER");
 
         game.addPlayerToList(profile);
+        game.setMyProfile(profile);
 
 
         if (mode.equals(GameMode.MULTIPLAYER_SAMEDEVICE.toString())) {
@@ -221,4 +227,13 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.buttonSinglePlayer: {
+                game.setGameMode("SINGLEPLAYER", true);
+                break;
+            }
+        }
+    }
 }

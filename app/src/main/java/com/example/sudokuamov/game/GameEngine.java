@@ -3,10 +3,6 @@ package com.example.sudokuamov.game;
 import android.os.Handler;
 import android.os.Looper;
 
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-
 import com.example.sudokuamov.game.helpers.Configurations;
 import com.example.sudokuamov.game.helpers.GameMode;
 import com.example.sudokuamov.game.helpers.Levels;
@@ -19,6 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 public class GameEngine {
     private static final Object mutex = new Object();
@@ -382,12 +382,20 @@ public class GameEngine {
     }
 
 
-    public void setGameMode(String mode) {
+    public void setGameMode(String mode, boolean reset) {
         if (mode.equals(GameMode.SINGLEPLAYER.toString())) {
 
             gameMode = GameMode.SINGLEPLAYER;
             ProfileActive = 0;
-            if (timer != null) timer.cancel();
+            this.countDown = 0;
+
+            if (reset) {
+                players.clear();
+                players.add(myProfile);
+                if (timer != null) timer.cancel();
+            }
+
+
             changedPayer.postValue(true);
         } else if (mode.equals(GameMode.MULTIPLAYER_SAMEDEVICE.toString())) {
             gameMode = GameMode.MULTIPLAYER_SAMEDEVICE;

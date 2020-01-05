@@ -136,6 +136,7 @@ public class GameGrid {
 
 
             gameEngine.setActivePlayerPoints();
+
             return true;
         } else {
             if (sudokuCells[x][y].getIsModifiable())
