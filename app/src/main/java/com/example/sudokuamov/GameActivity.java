@@ -105,7 +105,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     game.createCleanSudokuGrid(gameGrid);
                 }
-
                 SocketConnector.getInstance().startReceivingData();
             } else {
                 game.createSudokuGrid(gameGrid);

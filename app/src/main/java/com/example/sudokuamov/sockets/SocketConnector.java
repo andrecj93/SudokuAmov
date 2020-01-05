@@ -113,8 +113,8 @@ public class SocketConnector {
             public void run() {
                 try {
 
-                    GetPlayerImage(false);
-                    SendFileImage(ipServer, baseDir + "/userPhoto_thumb.jpg");
+                    //GetPlayerImage(false);
+                    //SendFileImage(ipServer, baseDir + "/userPhoto_thumb.jpg");
 
                     socketGame = new Socket();
                     socketGame.connect(new InetSocketAddress(ipServer, PORT));
@@ -144,14 +144,14 @@ public class SocketConnector {
                     AmIserver = SERVER;
                     serverSocket = new ServerSocket(PORT);
 
-                    GetPlayerImage(false);
+                    //GetPlayerImage(false);
 
                     while (true) {
 
                         final Socket socket = serverSocket.accept();
 
 
-                        SendFileImage(socket.getInetAddress().getHostAddress(), baseDir + "/userPhoto_thumb.jpg");
+                        //SendFileImage(socket.getInetAddress().getHostAddress(), baseDir + "/userPhoto_thumb.jpg");
 
                         clientSocketList.add(new ClientPlayers(socket));
 
@@ -245,6 +245,7 @@ public class SocketConnector {
                                 setPlayerList(exchange.profileList, exchange.profileActive);
                                 break;
                             case setPlayerName:
+                                setGameBoard(exchange.gameBoard);
                                 setPlayerName(exchange.playerName, getSocketIp(socket));
                                 break;
                             case SetGameBoar:
@@ -267,6 +268,7 @@ public class SocketConnector {
                                 break;
                         }
                     } catch (Exception e) {
+                        GameEngine.getInstance().setGameMode("SINGLEPLAYER", true);
                         Log.d("ERRO A RECEBER", e.getMessage());
                     }
                 }
@@ -297,9 +299,9 @@ public class SocketConnector {
         String IpString = getLocalIpAddress().replace('.', '-');
 
         for (Profile profile : clientSocketList) {
-            if (IpString.equals(profile.getIp()))
+            /*if (IpString.equals(profile.getIp()))
                 gameEngine.setMyProfile(gameEngine.getMyProfile());
-            else
+            else*/
                 gameEngine.addPlayerToList(profile);
         }
 
@@ -313,7 +315,8 @@ public class SocketConnector {
             p.setUsername(name);
             GameEngine gameEngine = GameEngine.getInstance();
 
-            DataExchange dataExchange = new DataExchange(DataExchange.Operation.setPlayerList, null, null, gameEngine.getAllPlayers(), 0, null, 0);
+
+            DataExchange dataExchange = new DataExchange(DataExchange.Operation.setPlayerList, gameEngine.getGameBoard(), null, gameEngine.getAllPlayers(), 0, null, 0);
 
             this.sendInfoToAllClients(dataExchange.getJSON());
         }
@@ -481,5 +484,34 @@ public class SocketConnector {
 
     public void removeObserver(LifecycleOwner lifecycleOwner) {
         ConnectionEstablished.removeObservers(lifecycleOwner);
+    }
+
+
+    public void CloseAllSockets() {
+        try {
+            if (socketGame != null)
+                socketGame.close();
+        } catch (Exception e) {
+        }
+
+        try {
+            if (serverSocket != null)
+                serverSocket.close();
+        } catch (Exception e) {
+        }
+
+
+        if (clientSocketList != null) {
+            for (ClientPlayers clientSocket : clientSocketList) {
+                try {
+                    if (clientSocket.socket != null)
+                        clientSocket.socket.close();
+                } catch (Exception e) {
+                }
+            }
+            clientSocketList.clear();
+        }
+
+        instance = null;
     }
 }

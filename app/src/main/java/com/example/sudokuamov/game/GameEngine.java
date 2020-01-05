@@ -3,10 +3,6 @@ package com.example.sudokuamov.game;
 import android.os.Handler;
 import android.os.Looper;
 
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
-
 import com.example.sudokuamov.game.helpers.Configurations;
 import com.example.sudokuamov.game.helpers.GameMode;
 import com.example.sudokuamov.game.helpers.Levels;
@@ -19,6 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 public class GameEngine {
     private static final Object mutex = new Object();
@@ -211,14 +211,8 @@ public class GameEngine {
         }
     }
 
-    public void setGameBoard(List<GameCell> gameBoard) {
-        synchronized (mutexGameboard) {
-            for (int i = 0; i < this.gameBoard.size(); i++) {
-                this.gameBoard.get(i).setValue(gameBoard.get(i).getValue());
-                this.gameBoard.get(i).setChangeable(gameBoard.get(i).isChangeable());
-            }
-        }
-        changedGrid.postValue(true);
+    public List<GameCell> getGameBoard() {
+        return gameBoard;
     }
 
 
@@ -267,6 +261,17 @@ public class GameEngine {
 
             changedGrid.postValue(true);
         }
+    }
+
+    public void setGameBoard(List<GameCell> gameBoard) {
+        synchronized (mutexGameboard) {
+            for (int i = 0; i < this.gameBoard.size(); i++) {
+                this.gameBoard.get(i).setValue(gameBoard.get(i).getValue());
+                this.gameBoard.get(i).setChangeable(gameBoard.get(i).isChangeable());
+            }
+        }
+
+        changedGrid.postValue(true);
     }
 
     public void redrawGame(GameGrid gameGrid) {
@@ -382,7 +387,6 @@ public class GameEngine {
         return gameMode;
     }
 
-
     public void setGameMode(String mode, boolean reset) {
         if (mode.equals(GameMode.SINGLEPLAYER.toString())) {
 
@@ -394,6 +398,7 @@ public class GameEngine {
                 players.clear();
                 players.add(myProfile);
                 if (timer != null) timer.cancel();
+                SocketConnector.getInstance().CloseAllSockets();
             }
 
 
@@ -440,6 +445,8 @@ public class GameEngine {
 
         if (gameMode != GameMode.SINGLEPLAYER)
             setCountDown(20);
+        else
+            changedPayer.postValue(true);
     }
 
     public void setObserver(LifecycleOwner lifecycleOwner, Observer<Boolean> observer) {
