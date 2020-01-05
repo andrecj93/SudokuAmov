@@ -268,7 +268,7 @@ public class SocketConnector {
                                 break;
                         }
                     } catch (Exception e) {
-                        GameEngine.getInstance().setGameMode("SINGLEPLAYER", true);
+
                         Log.d("ERRO A RECEBER", e.getMessage());
                     }
                 }
