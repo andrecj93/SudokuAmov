@@ -5,11 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 
 import com.example.sudokuamov.game.GameEngine;
 import com.example.sudokuamov.game.Profile;
@@ -22,7 +20,10 @@ import com.example.sudokuamov.view.PlayerView;
 
 import java.io.File;
 
-public class GameActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+
+public class GameActivity extends AppCompatActivity implements View.OnClickListener {
     String mode;
     int difficulty = 0;
     //Singleton to run for the entire game
@@ -55,6 +56,10 @@ public class GameActivity extends AppCompatActivity {
 
             initBoard(false);
         }
+
+        Button buttonSinglePlayer = findViewById(R.id.buttonSinglePlayer);
+        buttonSinglePlayer.setOnClickListener(this);
+
 
         //disableViews();
     }
@@ -220,6 +225,16 @@ public class GameActivity extends AppCompatActivity {
                 System.out.print(sudokuGrid[x][y] + "|");
             }
             System.out.println();
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.buttonSinglePlayer: {
+                game.setGameMode("SINGLEPLAYER", true);
+                break;
+            }
         }
     }
 
