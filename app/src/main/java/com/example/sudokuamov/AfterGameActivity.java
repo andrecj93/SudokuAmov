@@ -6,13 +6,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.util.Locale;
-
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Locale;
 
 public class AfterGameActivity extends AppCompatActivity implements View.OnClickListener {
 
-    String userWinner, points, userPhotoThumbnail;
+    String userWinner, userPhotoThumbnail;
+    int points = 0;
     Button continueBtn;
     TextView tvPoints, tvUserName;
 
@@ -30,11 +31,12 @@ public class AfterGameActivity extends AppCompatActivity implements View.OnClick
         Intent intent = getIntent();
         userWinner = intent.getStringExtra("nickName");
         userPhotoThumbnail = intent.getStringExtra("userPhotoThumbPath");
-        points = intent.getStringExtra("winnerPoints");
+        points = intent.getIntExtra("winnerPoints", 0);
 
-        tvPoints.setText(userWinner);
-        String strPoints = String.format(Locale.getDefault(), "%d %s", R.string.points, points);
-        tvUserName.setText(strPoints);
+        String strPoints = String.format(Locale.getDefault(), "%s %d", getString(R.string.points), points);
+        tvUserName.setText(userWinner);
+        tvPoints.setText(strPoints);
+
     }
 
 
@@ -42,7 +44,6 @@ public class AfterGameActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         if (v.getId() == R.id.continueBtn) {
             startActivity(new Intent(this, MenuActivity.class));
-            finish();
         }
     }
 }

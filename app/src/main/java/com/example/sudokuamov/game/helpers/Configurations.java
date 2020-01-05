@@ -10,5 +10,4 @@ public final class Configurations {
     public static final int HARD = 50;
     public static final int VERYHARD = 60;
 
-
 }

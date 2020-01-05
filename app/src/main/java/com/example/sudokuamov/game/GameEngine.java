@@ -3,6 +3,10 @@ package com.example.sudokuamov.game;
 import android.os.Handler;
 import android.os.Looper;
 
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+
 import com.example.sudokuamov.game.helpers.Configurations;
 import com.example.sudokuamov.game.helpers.GameMode;
 import com.example.sudokuamov.game.helpers.Levels;
@@ -15,10 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 
 public class GameEngine {
     private static final Object mutex = new Object();
@@ -399,26 +399,26 @@ public class GameEngine {
 
     }
 
-    public Profile getEndOffGame() {
+    public Profile getWinnerProfile() {
         int length = getGameBoardArray().length;
         Profile winnerProfile = null;
         int points = 0;
-        //Is sudoku solved
-        if (SudokuSolver.solveSudoku(getGameBoardArray(), length)) {
-            if (gameMode != GameMode.SINGLEPLAYER) {
-                for (Profile profile : players) {
-                    if (profile.getPoints() > points) {
-                        points = profile.getPoints();
-                        winnerProfile = profile;
-                    } else if (profile.getPoints() == points) {
-                        //Tie, do something
-                    }
+
+        if (gameMode != GameMode.SINGLEPLAYER) {
+            for (Profile profile : players) {
+                if (profile.getPoints() > points) {
+                    points = profile.getPoints();
+                    winnerProfile = profile;
+                } else if (profile.getPoints() == points) {
+                    //Tie, do something
                 }
-            } else
-                winnerProfile = players.get(0);
-        }
+            }
+        } else
+            winnerProfile = players.get(0);
+
         return winnerProfile;
     }
+
 
     public void setActivePlayerPoints() {
         getActivePalyer().setPoints(0);

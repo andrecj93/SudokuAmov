@@ -12,7 +12,18 @@ import com.example.sudokuamov.game.GameCell;
 import com.example.sudokuamov.game.GameEngine;
 import com.example.sudokuamov.game.Profile;
 import com.example.sudokuamov.game.helpers.Configurations;
+import com.example.sudokuamov.game.helpers.GameInfoHistory;
 import com.example.sudokuamov.view.sudokuGrid.SudokuCell;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GameGrid {
 
@@ -120,8 +131,8 @@ public class GameGrid {
             gameEngine.setActivePlayerPoints();
             return true;
         } else {
-
-            setCellRed(x, y, number);
+            if (sudokuCells[x][y].getIsModifiable())
+                setCellRed(x, y, number);
 
             return false;
         }
@@ -164,7 +175,8 @@ public class GameGrid {
     public boolean isAllCellsFilled() {
         for (int x = 0; x < Configurations.GRID9; x++) {
             for (int y = 0; y < Configurations.GRID9; y++) {
-                if (sudokuCells[x][y].getValue() <= 0)
+                if (gameEngine.getGameCell(x, y).getValue() <= 0)
+                    //if (sudokuCells[x][y].getValue() <= 0)
                     return false;
             }
         }
@@ -176,9 +188,7 @@ public class GameGrid {
 
         //If game is not successful and all numbers are filled
         if (isAllCellsFilled()) {
-
-            Profile checkWinner = gameEngine.getEndOffGame();
-
+            Profile checkWinner = gameEngine.getWinnerProfile();
             if (checkWinner != null) {
                 Intent intent = new Intent(HelperMethods.makeIntentForUserNameAndPhoto(
                         new String[]{
@@ -188,13 +198,46 @@ public class GameGrid {
                         }, context, AfterGameActivity.class));
                 intent.putExtra("winnerPoints", checkWinner.getPoints());
 
+                saveGameInfoInHistory();
+
+                context.startActivity(intent);
                 //startActivity(intent);
                 //finish();
-                //TODO - FINISH THIS, NEED TO PUT THIS ON THE SINGLE PLAYER ACTIVITY
                 Toast.makeText(context, "Well Done! That is the correct solution.", Toast.LENGTH_LONG).show();
             } else
                 Toast.makeText(context, "Try again! That is not a correct solution.", Toast.LENGTH_LONG).show();
         }
     }
 
+
+    public void saveGameInfoInHistory() {
+        GameInfoHistory gameInfoHistory = new GameInfoHistory(
+                gameEngine.getWinnerProfile(),
+                gameEngine.getAllPlayers(),
+                gameEngine.getGameMode().name(),
+                gameEngine.getLevels().name());
+
+        String pathToSaveHistory = context.getExternalFilesDir(null) + "/" + "gameHistory.json";
+
+        Gson gson = new Gson();
+        List<GameInfoHistory> historyList = new ArrayList<>();
+        historyList.add(gameInfoHistory);
+        String toJson = gson.toJson(historyList);
+
+        Type type = new TypeToken<List<GameInfoHistory>>() {
+        }.getType();
+        List<GameInfoHistory> gameInfoHistoryList = new Gson().fromJson(toJson, type);
+
+//        if (!gameInfoHistoryList.contains(gameInfoHistory))
+//            gameInfoHistoryList.add(gameInfoHistory);
+
+        //Write new json class
+        try (Writer writer = new FileWriter(pathToSaveHistory)) {
+            Gson gson_ = new GsonBuilder().setPrettyPrinting().create();
+            gson_.toJson(gameInfoHistoryList, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
