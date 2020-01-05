@@ -8,6 +8,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+
 import com.example.sudokuamov.game.GameEngine;
 import com.example.sudokuamov.game.Profile;
 import com.example.sudokuamov.game.helpers.Configurations;
@@ -18,9 +21,6 @@ import com.example.sudokuamov.view.GameGrid;
 import com.example.sudokuamov.view.PlayerView;
 
 import java.io.File;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
 
 public class GameActivity extends AppCompatActivity {
     String mode;
@@ -79,7 +79,7 @@ public class GameActivity extends AppCompatActivity {
         TextView timerDisplay = findViewById(R.id.time);
         TextView pointsDisplay = findViewById(R.id.points);
 
-        final PlayerView playerView = new PlayerView(playerNameDisplay, pointsDisplay, timerDisplay, imgUser);
+        final PlayerView playerView = new PlayerView(playerNameDisplay, pointsDisplay, timerDisplay, imgUser, this);
 
         gameGrid = new GameGrid(this, game, playerView, findViewById(R.id.sudokuGridView));
 

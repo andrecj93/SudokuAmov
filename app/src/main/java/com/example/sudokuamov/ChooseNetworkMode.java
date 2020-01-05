@@ -111,18 +111,12 @@ public class ChooseNetworkMode extends AppCompatActivity implements View.OnClick
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 socketConnector.closeServerSocket();
-
-                                if (dialog != null)
-                                    dialog.dismiss();
                             }
                         })
                         .setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 socketConnector.closeServerSocket();
-
-                                if (dialog != null)
-                                    dialog.dismiss();
                             }
                         })
                         .create();
@@ -132,7 +126,6 @@ public class ChooseNetworkMode extends AppCompatActivity implements View.OnClick
                 break;
             }
             case R.id.Client: {
-
                 final EditText taskEditText = new EditText(this);
                 AlertDialog dialog = new AlertDialog.Builder(this)
                         .setTitle("Insert Server IP")
@@ -143,7 +136,6 @@ public class ChooseNetworkMode extends AppCompatActivity implements View.OnClick
                             public void onClick(DialogInterface dialog, int which) {
                                 String value = String.valueOf(taskEditText.getText());
                                 socketConnector.ConnectToServer(value).start();
-                                dialog.dismiss();
                             }
                         })
                         .setNegativeButton("Cancel", null)

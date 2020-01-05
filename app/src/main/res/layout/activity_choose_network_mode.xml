@@ -5,25 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:screenOrientation="portrait"
+    android:background="@color/colorPrimaryDark"
     tools:context=".ChooseNetworkMode">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark"
-        tools:context=".MenuActivity"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="-235dp">
-
         <Button
-            android:id="@+id/Server"
+            android:id="@+id/btnServer"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:background="@drawable/other_button_style"
-            android:text="@string/server"
+            android:text="@string/server_str"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="@dimen/textSizeButtonMain"
-            app:layout_constraintBottom_toTopOf="@+id/Client"
+            app:layout_constraintBottom_toTopOf="@+id/btnClient"
 
             app:layout_constraintEnd_toStartOf="@+id/guideline7"
             app:layout_constraintHorizontal_bias="1.0"
@@ -31,12 +24,12 @@
             app:layout_constraintTop_toTopOf="@+id/guideline8" />
 
         <Button
-            android:id="@+id/Client"
+            android:id="@+id/btnClient"
             android:layout_width="0dp"
             android:layout_height="100dp"
             android:layout_marginBottom="148dp"
             android:background="@drawable/other_button_style"
-            android:text="@string/client"
+            android:text="@string/client_str"
             android:textSize="@dimen/textSizeButtonMain"
             app:layout_constraintBottom_toTopOf="@+id/guideline10"
             app:layout_constraintEnd_toStartOf="@+id/guideline7"
@@ -70,8 +63,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.95" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <androidx.constraintlayout.widget.Guideline
