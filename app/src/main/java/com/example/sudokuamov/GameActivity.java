@@ -8,9 +8,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-
 import com.example.sudokuamov.game.GameEngine;
 import com.example.sudokuamov.game.Profile;
 import com.example.sudokuamov.game.helpers.Configurations;
@@ -21,6 +18,9 @@ import com.example.sudokuamov.view.GameGrid;
 import com.example.sudokuamov.view.PlayerView;
 
 import java.io.File;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 public class GameActivity extends AppCompatActivity {
     String mode;
@@ -35,6 +35,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_game);
 
         game = GameEngine.getInstance();
@@ -55,7 +56,7 @@ public class GameActivity extends AppCompatActivity {
             initBoard(false);
         }
 
-        disableViews();
+        //disableViews();
     }
 
     @Override
@@ -106,13 +107,11 @@ public class GameActivity extends AppCompatActivity {
             }
 
         } else {
-            game = GameEngine.getInstance();
-
             mode = game.getGameMode().toString();
 
-            userName = game.getActivePalyer().getUsername();
+            /*userName = game.getActivePalyer().getUsername();
             userPhotoThumb = game.getActivePalyer().getUserPhotoThumbnailPath();
-            userPhoto = game.getActivePalyer().getUserPhotoPath();
+            userPhoto = game.getActivePalyer().getUserPhotoPath();*/
 
             setObserver();
             setObserverGrid();
@@ -126,8 +125,6 @@ public class GameActivity extends AppCompatActivity {
         super.onStop();
         game.removeObserver(this);
         game.removeObserverGrid(this);
-
-        finish();
     }
 
 

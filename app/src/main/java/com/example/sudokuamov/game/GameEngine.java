@@ -23,6 +23,7 @@ import androidx.lifecycle.Observer;
 public class GameEngine {
     private static final Object mutex = new Object();
     private static final Object mutexGameboard = new Object();
+
     private static GameEngine instance;
     MutableLiveData<Boolean> changedPayer = new MutableLiveData<>();
     MutableLiveData<Boolean> changedGrid = new MutableLiveData<>();
@@ -383,6 +384,7 @@ public class GameEngine {
 
     public void setGameMode(String mode) {
         if (mode.equals(GameMode.SINGLEPLAYER.toString())) {
+
             gameMode = GameMode.SINGLEPLAYER;
             ProfileActive = 0;
             if (timer != null) timer.cancel();
@@ -394,6 +396,7 @@ public class GameEngine {
 
         } else {
             gameMode = GameMode.MULTIPLAYER_MULTIDEVICE;
+
             if (SocketConnector.getAmIserver() == SocketConnector.SERVER) {
                 ProfileActive = 0;
                 setCountDown(30);
