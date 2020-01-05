@@ -38,6 +38,7 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         game = GameEngine.getInstance();
+
         imgUser = findViewById(R.id.imageView);
 
         //activity is being created for the first time
@@ -50,6 +51,7 @@ public class GameActivity extends AppCompatActivity {
             difficulty = intent.getIntExtra("Difficulty", 0);
             initBoard(true);
         } else {
+
             initBoard(false);
         }
 
@@ -104,6 +106,8 @@ public class GameActivity extends AppCompatActivity {
             }
 
         } else {
+            game = GameEngine.getInstance();
+
             mode = game.getGameMode().toString();
 
             userName = game.getActivePalyer().getUsername();
@@ -115,20 +119,17 @@ public class GameActivity extends AppCompatActivity {
 
             game.redrawGame(gameGrid);
         }
-
-
     }
 
     @Override
     protected void onStop() {
+        super.onStop();
         game.removeObserver(this);
         game.removeObserverGrid(this);
 
-        game.resetGame();
         finish();
-
-        super.onStop();
     }
+
 
     private void setObserver() {
         game.setObserver(this, new Observer<Boolean>() {
@@ -150,8 +151,7 @@ public class GameActivity extends AppCompatActivity {
 
 
     private void setupPlayers() {
-        Profile profile = new Profile(userName, userPhoto, userPhotoThumb, null);
-        game.setMyProfile(profile);
+        Profile profile = new Profile(userName, userPhoto, userPhotoThumb, "SERVER");
 
         game.addPlayerToList(profile);
 
@@ -176,6 +176,14 @@ public class GameActivity extends AppCompatActivity {
             socketConnector.startReceivingData();
 
             socketConnector.actualizaPlayerList(game);
+
+            if (SocketConnector.getAmIserver() == SocketConnector.SERVER) {
+                game.setMyProfile(profile);
+            } else {
+                profile.setIp(SocketConnector.getLocalIpAddress());
+
+                game.setMyProfile(profile);
+            }
         }
     }
 

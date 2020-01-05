@@ -3,6 +3,7 @@ package com.example.sudokuamov.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Toast;
 
@@ -97,7 +98,7 @@ public class GameGrid {
         }
 
         if (number == 0) {
-            new Handler().postDelayed(new Runnable() {
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     sudokuCells[x][y].setValue(number);
@@ -105,18 +106,24 @@ public class GameGrid {
             }, 0);
 
             gameEngine.getGameCell(x, y).setValue(0);
+
             return false;
         }
 
+
         if (gameEngine.checkNewNumberFill(x, y, number)) {
-            new Handler().postDelayed(new Runnable() {
+
+            gameEngine.getGameCell(x, y).setValue(number);
+
+
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     sudokuCells[x][y].setValue(number);
                 }
             }, 0);
 
-            gameEngine.getGameCell(x, y).setValue(number);
+
             gameEngine.setActivePlayerPoints();
             return true;
         } else {
@@ -129,7 +136,7 @@ public class GameGrid {
 
 
     public void setCellRed(final int x, final int y, final int number) {
-        new Handler().postDelayed(new Runnable() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
                 sudokuCells[x][y].setValue(number);
@@ -138,7 +145,7 @@ public class GameGrid {
             }
         }, 0);
 
-        new Handler().postDelayed(new Runnable() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
 

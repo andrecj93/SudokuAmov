@@ -42,6 +42,7 @@ public class SocketConnector {
     static int AmIserver;
     private static SocketConnector instance;
     final int PORT = 8899;
+    final int PORTIMAGE = 8898;
     ServerSocket serverSocket;
     Socket socketGame;
 
@@ -96,7 +97,7 @@ public class SocketConnector {
                 }
             }
         } catch (SocketException ex) {
-            ex.printStackTrace();
+            Log.e("ERRO A ACEDER AO IP", ex.getMessage());
         }
         return null;
     }
@@ -105,17 +106,21 @@ public class SocketConnector {
         this.baseDir = baseDir;
     }
 
+
     public Thread ConnectToServer(final String ipServer) {
         return new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+
+                    GetPlayerImage(false);
+                    SendFileImage(ipServer, baseDir + "/userPhoto_thumb.jpg");
+
                     socketGame = new Socket();
                     socketGame.connect(new InetSocketAddress(ipServer, PORT));
 
                     AmIserver = CLIENT;
 
-                    //SendFileImage(socketGame,baseDir + "/userPhoto_thumb.jpg");
 
                     procMsg.post(new Runnable() {
                         @Override
@@ -139,19 +144,27 @@ public class SocketConnector {
                     AmIserver = SERVER;
                     serverSocket = new ServerSocket(PORT);
 
-                    while (serverSocket != null) {
+                    GetPlayerImage(false);
+
+                    while (true) {
+
                         final Socket socket = serverSocket.accept();
 
-                        //GetPlayerImage(socket,baseDir+socket.getInetAddress().toString().replace('.', '-')+".jpg");
+
+                        SendFileImage(socket.getInetAddress().getHostAddress(), baseDir + "/userPhoto_thumb.jpg");
 
                         clientSocketList.add(new ClientPlayers(socket));
 
                         procMsg.post(new Runnable() {
                             @Override
                             public void run() {
+
+
                                 ConnectionEstablished.postValue(true);
                             }
                         });
+
+
                     }
 
                 } catch (Exception e) {
@@ -194,8 +207,6 @@ public class SocketConnector {
         }
     }
 
-
-
     public void sendInfoToAllClients(final String message) {
         synchronized (mutexSend) {
             for (ClientPlayers clientPlayer : clientSocketList) {
@@ -208,10 +219,6 @@ public class SocketConnector {
         synchronized (mutexSend) {
             this.sendInfo(socketGame, message);
         }
-    }
-
-    private void trataMensagens(final DataExchange exchange, final Socket socket) {
-
     }
 
     private void ReceiveInfoThread(final Socket socket) {
@@ -256,6 +263,8 @@ public class SocketConnector {
                                 setGameBoard(exchange.gameBoard);
                                 setPlayerList(exchange.profileList, exchange.profileActive);
                                 break;
+                            default:
+                                break;
                         }
                     } catch (Exception e) {
                         Log.d("ERRO A RECEBER", e.getMessage());
@@ -285,10 +294,9 @@ public class SocketConnector {
 
         gameEngine.removeAllPlayers();
 
-        String IpString = socketGame.getInetAddress().toString().replace('.', '-');
+        String IpString = getLocalIpAddress().replace('.', '-');
 
         for (Profile profile : clientSocketList) {
-
             if (IpString.equals(profile.getIp()))
                 gameEngine.setMyProfile(gameEngine.getMyProfile());
             else
@@ -311,7 +319,6 @@ public class SocketConnector {
         }
     }
 
-
     private void setGameBoard(List<GameCell> gameBoard) {
         GameEngine.getInstance().setGameBoard(gameBoard);
     }
@@ -323,7 +330,6 @@ public class SocketConnector {
     private String getSocketIp(Socket socket) {
         return socket.getInetAddress().toString().replace('.', '-').replace("/", "");
     }
-
 
     public void sendInfo(final Socket socket, final String message) {
 
@@ -350,81 +356,123 @@ public class SocketConnector {
         }
     }
 
-    /*public String getMySocketIpAddress(Socket socket) {
-        try {
-            return socket.getInetAddress().toString();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }*/
-
-    private void SendFileImage(Socket socket, String filepath) {
-        OutputStream out = null;
-        FileInputStream fis = null;
-        BufferedInputStream bis = null;
+    private void SendFileImage(final String ipServer, final String filepath) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Log.d("SendFileImage INICIO", filepath);
 
 
-        try {
-            File myFile = new File(filepath);
-            byte[] mybytearray = new byte[(int) myFile.length()];
-            fis = new FileInputStream(myFile);
-            bis = new BufferedInputStream(fis);
+                    Socket imageSocket = new Socket();
 
-            bis.read(mybytearray, 0, mybytearray.length);
+                    imageSocket.connect(new InetSocketAddress(ipServer, PORTIMAGE));
 
-            out = socket.getOutputStream();
+                    Log.d("AENVIAR", filepath);
 
-            out.write(mybytearray, 0, mybytearray.length);
+                    OutputStream out = null;
+                    FileInputStream fis = null;
+                    BufferedInputStream bis = null;
 
-            out.flush();
+                    try {
+                        File myFile = new File(filepath);
+                        byte[] mybytearray = new byte[(int) myFile.length()];
+                        fis = new FileInputStream(myFile);
+                        bis = new BufferedInputStream(fis);
 
-        } catch (Exception e) {
-            Log.e("ERRO A ENVIAR MENSAGEM", e.getMessage());
-        } finally {
-            try {
-                if (bis != null)
-                    bis.close();
-                if (out != null)
-                    out.close();
-            } catch (Exception e) {
+                        bis.read(mybytearray, 0, mybytearray.length);
+
+                        out = imageSocket.getOutputStream();
+
+                        out.write(mybytearray, 0, mybytearray.length);
+
+                        out.flush();
+
+                    } catch (Exception e) {
+                        Log.d("ERRO A ENVIAR MENSAGEM", e.getMessage());
+                    } finally {
+                        try {
+                            if (bis != null)
+                                bis.close();
+                            if (out != null)
+                                out.close();
+                            if (imageSocket != null)
+                                imageSocket.close();
+
+                        } catch (Exception e) {
+                        }
+                    }
+
+                } catch (Exception e) {
+                    Log.d("SendFileImage", e.getMessage());
+                }
             }
-        }
+        }).start();
     }
 
-    private void GetPlayerImage(final String filepath) {
-        InputStream ins = null;
-        FileOutputStream fos = null;
-        BufferedOutputStream bos = null;
-        int bytesRead;
+    private void GetPlayerImage(final boolean server) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    while (true) {
+                        ServerSocket imageServerSocket = new ServerSocket(PORTIMAGE);
+                        Socket imageSocket = null;
 
+                        imageSocket = imageServerSocket.accept();
 
-        Socket socket = new Socket();
-        try {
+                        Log.d("GetPlayerImage INICIO", "inicio");
 
-            File f = new File(filepath);
-            f.deleteOnExit();
+                        InputStream ins = null;
+                        FileOutputStream fos = null;
+                        BufferedOutputStream bos = null;
+                        int bytesRead;
+                        String fileName = null;
 
-            byte[] mybytearray = new byte[1024];
-            ins = socket.getInputStream();
-            fos = new FileOutputStream(filepath);
-            bos = new BufferedOutputStream(fos);
+                        Log.d("RECEBER IMAGEM", "a iniciar");
 
-            while ((bytesRead = ins.read(mybytearray)) > 0) {
-                bos.write(mybytearray, 0, bytesRead);
-                bos.flush();
+                        if (server)
+                            fileName = baseDir + "/" + getSocketIp(imageSocket) + ".jpg";
+                        else
+                            fileName = baseDir + "/server.jpg";
+
+                        try {
+
+                            File f = new File(fileName);
+                            f.deleteOnExit();
+
+                            byte[] mybytearray = new byte[2048];
+
+                            ins = imageSocket.getInputStream();
+
+                            fos = new FileOutputStream(fileName);
+
+                            bos = new BufferedOutputStream(fos);
+
+                            while ((bytesRead = ins.read(mybytearray)) > 0) {
+                                bos.write(mybytearray, 0, bytesRead);
+                                bos.flush();
+                            }
+
+                        } catch (Exception e) {
+                            Log.d("ERRO A RECEBER MENSAGEM", e.getMessage());
+                        } finally {
+                            try {
+                                if (fos != null) fos.close();
+                                if (bos != null) bos.close();
+                                if (ins != null) ins.close();
+                                if (imageServerSocket != null)
+                                    imageServerSocket.close();
+
+                            } catch (Exception e) {
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    Log.d("GetPlayerImage", e.getMessage());
+                }
             }
-
-        } catch (Exception e) {
-            Log.e("ERRO A RECEBER MENSAGEM", e.getMessage());
-        } finally {
-            try {
-                ins = null;
-                if (fos != null) fos.close();
-                if (bos != null) bos.close();
-            } catch (Exception e) {
-            }
-        }
+        }).start();
     }
 
     public void setObserver(LifecycleOwner lifecycleOwner, Observer<Boolean> observer) {

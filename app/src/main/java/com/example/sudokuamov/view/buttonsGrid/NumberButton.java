@@ -19,7 +19,7 @@ public class NumberButton extends AppCompatButton implements View.OnClickListene
     @Override
     public void onClick(View v) {
         if (number >= 0)
-            GameEngine.getInstance().setNumber(number);
+            GameEngine.getInstance().setNumber(number, false);
         else
             GameEngine.getInstance().GetPosssibleNumber();
     }

@@ -211,14 +211,11 @@ public class GameEngine {
 
     public void setGameBoard(List<GameCell> gameBoard) {
         synchronized (mutexGameboard) {
-
             for (int i = 0; i < this.gameBoard.size(); i++) {
                 this.gameBoard.get(i).setValue(gameBoard.get(i).getValue());
                 this.gameBoard.get(i).setChangeable(gameBoard.get(i).isChangeable());
             }
-
         }
-
         changedGrid.postValue(true);
     }
 
@@ -319,7 +316,7 @@ public class GameEngine {
 
     public void setRemoteNumber(int x, int y, int number) {
         setSelectedPositions(x, y);
-        setNumber(number);
+        setNumber(number, true);
     }
 
 
@@ -328,7 +325,7 @@ public class GameEngine {
         this.selectedPosY = y;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(int number, boolean isRemote) {
         if (selectedPosX < 0 || selectedPosY < 0) {
             return;
         }
@@ -341,6 +338,12 @@ public class GameEngine {
                 SocketConnector.getInstance().sendClientInfo(dataExchange.getJSON());
                 return;
             }
+
+            if (!isRemote)
+                if (SocketConnector.getAmIserver() == SocketConnector.SERVER) {
+                    if (!this.getActivePalyer().getIp().equals("SERVER"))
+                        return;
+                }
         }
 
 
