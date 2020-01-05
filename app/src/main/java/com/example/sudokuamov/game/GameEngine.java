@@ -398,7 +398,6 @@ public class GameEngine {
                 players.clear();
                 players.add(myProfile);
                 if (timer != null) timer.cancel();
-                SocketConnector.getInstance().CloseAllSockets();
             }
 
 
